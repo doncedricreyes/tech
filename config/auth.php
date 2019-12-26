@@ -46,6 +46,20 @@ return [
             'provider' => 'admins',
         ],
 
+        'customer' => [
+            'driver' => 'session',
+            'provider' => 'customers',
+            ],
+
+        'repair' => [
+                'driver' => 'session',
+                'provider' => 'repairs',
+                ],
+                'techsupport' => [
+                    'driver' => 'session',
+                    'provider' => 'techsupports',
+                    ],
+
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
@@ -75,6 +89,19 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Admin::class,
+        ],
+
+        'customers' => [
+            'driver' => 'eloquent',
+            'model' => App\Customer::class,
+        ],
+        'repairs' => [
+            'driver' => 'eloquent',
+            'model' => App\Repair::class,
+        ],
+        'techsupports' => [
+            'driver' => 'eloquent',
+            'model' => App\Techsupport::class,
         ],
 
         'users' => [
@@ -107,6 +134,23 @@ return [
 
         'admins' => [
             'provider' => 'admins',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+
+        'customers' => [
+            'provider' => 'customers',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+
+        'repairs' => [
+            'provider' => 'repairs',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+        'techsupports' => [
+            'provider' => 'techsupports',
             'table' => 'password_resets',
             'expire' => 60,
         ],

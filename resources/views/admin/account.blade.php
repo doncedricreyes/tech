@@ -41,7 +41,7 @@ legend{
      
      
             <legend>Edit Account</legend>
-            <form action = "{{route('update-admin')}}" method="post" enctype="multipart/form-data">
+            <form action = "{{route('update.admin')}}" method="post" enctype="multipart/form-data">
                                           
                     {{csrf_field() }}
                     <input name="_method" type="hidden" value="PUT">

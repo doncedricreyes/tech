@@ -53,6 +53,15 @@
           <li class="nav-item {{Request::is('contacts') ? 'active' : ''}}">
             <a class="nav-link" href="/contacts">Contact</a>
           </li>
+          <li class="nav-item {{Request::is('/customer/service') ? 'active' : ''}}">
+            <a class="nav-link" href="/customer/service">Service</a>
+          </li>
+               <li class="nav-item {{Request::is('/customer/service') ? 'active' : ''}}">
+            <a class="nav-link" href="/customer/service/tickets">My tickets</a>
+          </li>
+          <li class="nav-item {{Request::is('/customer/login') ? 'active' : ''}}">
+            <a class="nav-link" href="/customer/login">Login</a>
+          </li>
         </ul>
       </div>
     </nav>

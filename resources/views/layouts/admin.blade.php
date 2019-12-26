@@ -83,22 +83,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
      
       <ul class="sidebar-menu" data-widget="tree">
           <!-- Optionally, you can add icons to the links -->
-          <li class="{{Request::is('admin/employees') || Request::is('admin') ? 'active' : ''}}"><a href="/admin/employees"><i class="fa fa-users"></i> <span>Employees</span></a></li>
-          <li class="{{Request::is('admin/jobs') ? 'active' : ''}}"><a href="/admin/jobs"><i class="fa fa-briefcase"></i> <span>Careers</span></a></li>
-          <li class="{{Request::is('admin/projects') ? 'active' : ''}}"><a href="/admin/projects"><i class="fa fa-clipboard"></i> <span>Projects</span></a></li>
-          <li class="{{Request::is('admin/contacts') ? 'active' : ''}}"><a href="/admin/contacts"><i class="fa fa-envelope-open"></i> <span>Inquiries</span></a></li>
 
-            <li class="{{Request::is('admin/archive/projects') || Request::is('admin/archive/employees')  ? 'active' : ''}} treeview" >
-                <a href="#"><i class="fa fa-archive"></i> <span>Archive</span>
-                  <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                  <li class="{{Request::is('admin/archive/projects') ? 'active' : ''}}"><a href="/admin/archive/projects"><i class=></i>Projects</a></li>
-                  <li class="{{Request::is('admin/archive/employees') ? 'active' : ''}}"><a href="/admin/archive/employees"><i class=></i>Employees</a></li>
-                </ul>
-              </li>
+            <li class="{{Request::is('admin/employees') || Request::is('admin') ? 'active' : ''}} treeview" >
+              <a href="/admin/employees"><i class="fa fa-users"></i> <span>Employees</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+              </a>
+              <ul class="treeview-menu">
+                <li class="{{Request::is('admin/employees/admins') ? 'active' : ''}}"><a href="/admin/employees/admins"><i class="fa fa-user"></i>Admins</a></li>
+                <li class="{{Request::is('admin/employees/techsupport') ? 'active' : ''}}"><a href="/admin/employees/techsupports"><i class="fa fa-user"></i>Tech Supports</a></li>
+                <li class="{{Request::is('admin/employees/repairmen') ? 'active' : ''}}"><a href="/admin/employees/repairmen"><i class="fa fa-user"></i>Repairmen</a></li>
+              </ul>
+            </li>
+          <li class="{{Request::is('admin/brands') ? 'active' : ''}}"><a href="/admin/brands"><i class="fa fa-briefcase"></i> <span>Brands</span></a></li>
+          <li class="{{Request::is('admin/products') ? 'active' : ''}}"><a href="/admin/products"><i class="fa fa-clipboard"></i> <span>Products</span></a></li>
+          <li class="{{Request::is('admin/branches') ? 'active' : ''}}"><a href="/admin/branches"><i class="fa fa-envelope-open"></i> <span>Branches</span></a></li>
+      
+          <li class="{{Request::is('admin/inventory') || Request::is('admin/inventory/orders') || Request::is('admin/inventory/requests')  ? 'active' : ''}} treeview" >
+            <a href="#"><i class="fa fa-archive"></i> <span>Inventory</span>
+              <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+              <li class="{{Request::is('admin/inventory') ? 'active' : ''}}"><a href="/admin/inventory"><i class=></i>Components</a></li>
+              <li class="{{Request::is('admin/inventory/orders') ? 'active' : ''}}"><a href="/admin/inventory/orders"><i class=></i>Orders</a></li>
+              <li class="{{Request::is('admin/inventory/requests') ? 'active' : ''}}"><a href="/admin/inventory/requests"><i class=></i>Requests</a></li>
+            </ul>
+          </li>
 
 
           <li><a href="/admin/logout"><i class="fa fa-sign-out"></i>  <span>Logout</span></a></li>

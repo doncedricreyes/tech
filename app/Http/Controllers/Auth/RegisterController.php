@@ -28,7 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/shop';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -49,12 +49,16 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'contact' => ['required', 'numeric',],
-            'address' => ['required',],
-
+            'name' => 'required|string|max:255|unique:customers|regex:/^[a-zA-Z,. ]+$/u',
+            'email' => 'required|string|email|max:255|unique:customers',
+            'address' => 'required|string',
+            'contact' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:7|unique:customers',
+            'password' => 'required|string|min:6|confirmed',
+            
+        ]
+        , [
+            'name.regex'=>'Name contains invalid character!',
+            'contact.regex'=>'Invalid contact!'
         ]);
     }
 
@@ -66,12 +70,29 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+      
+   
+            $customer =  Customer::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'contact' => $data['contact'],
             'address' => $data['address'],
+            'contact' => $data['contact'],
             'password' => Hash::make($data['password']),
+            'role' =>'customer',
         ]);
+     
+
+        
+        return $customer;
+
+     
+ 
+      
+
+    }
+    
+    public function showRegistrationForm()
+    {
+        return view('auth.customer-register');
     }
 }

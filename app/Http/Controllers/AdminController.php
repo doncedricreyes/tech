@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers;
 use Hash;
-use App\Project;
 use App\Admin;
-use App\Employee;
-use App\Application;
-use App\Job;
-use App\Contact;
+use App\Repair;
+use App\Techsupport;
+use App\Brand;
+use App\Branch;
+use App\Product;
+use App\Category;
+use App\Inventory;
+use App\Order;
+use App\Request_Inventory;
 use Auth;
 use Image;
 use Excel;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+
 
 class AdminController extends Controller
 {
@@ -30,107 +37,256 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function employees()
+    public function home()
     {
-        $employees = Employee::where('status','!=','N/A')->orderBy('name')->paginate(10);
-        return view('admin.view-employees',['employees'=>$employees]);
+    
+        $admins = Admin::where('status','active')->orderBy('name')->paginate(10);
+        return view('admin.admins',['admins'=>$admins]);
+     
     }
   
-    public function add_employee(Request $request)
+    public function admin()
+    {
+        $admins = Admin::where('status','active')->orderBy('name')->paginate(10);
+        return view('admin.admins',['admins'=>$admins]);
+    }
+
+    public function create_admin(Request $request)
     {
         $input = request()->validate([
-     
-            'pic' => 'mimes:jpeg,jpg,png,bmp,gif,tif,tiff|max:50000|nullable',
-            'name' => 'required|string|max:255',
-            'email' => 'string|max:255|email|nullable',
-            'contact' => 'max:255|nullable',
-            'address'=> 'string|max:255|nullable',
-            'position'=> 'required|string',
-            'date_employed'=> 'required',
-            'status'=> 'required|string',
-        ], [
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z,. ]+$/u|unique:admins|',
+           'email' => 'required|string|email|max:255|unique:admins',
+           'password' => 'required|string|min:6|',
+          
 
-        ]);
+       ], [
+           'name.regex'=>'Name contains invalid character!',
+       ]);
 
-        if ($request->hasFile('pic')) {
-            $filenameWithExt = $request->file('pic')->getClientOriginalName();
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('pic')->getClientOriginalExtension();
-            $fileNametoStore = $filename.'_'.time().'.'.$extension;
-            $path = $request->file('pic')->storeAs('public/images',$fileNametoStore);
-            
-        }
-        else{
-            $fileNametoStore = 'noimage.jpg';
-
-        }
-
-            $employee = new Employee();
-            $employee->name = $request->name;
-            $employee->email = $request->email;
-            $employee->contact = $request->contact;
-            $employee->address = $request->address;
-            $employee->position = $request->position;
-            $employee->date_employed = $request->date_employed;
-            $employee->status = $request->status;
-            $employee->pic = $fileNametoStore;
-            $employee->save();
-            $request->session()->flash('alert-success', 'Employee successfully added!');
-            return redirect()->back();
+   
+       $admin = new Admin();
+       $admin->role = $request->role;
+       $admin->name = $request->name;
+       $admin->email=$request->email;
+       $admin->password = Hash::make($request->password);
+       $admin->status = "active";
+       $admin->save();
+       $request->session()->flash('alert-success', 'Account Successfully Created!');
+       return redirect()->back();
     }
 
-    public function search_employee(Request $request)
+    public function delete_admin($id,Request $request)
     {
-        $search = $request->search;
-        $employees = Employee::where('name','=',$search)
-        ->where('status','!=','N/A')
-        ->orderBy('name')->paginate(10);
-
-        return view('admin.view-employees',['employees'=>$employees]);
+        $admin = Admin::find($id);
+        $admin->status = 'inactive';
+        $admin->save();
+        $request->session()->flash('alert-success', 'Admin successfully removed!');
+        return redirect()->back();
     }
 
-    public function employee_excel(){
-        $employees = Employee::where('status','!=','N/A')->orderBy('name')->get();
-        $employees_array[] = array('Employee Name','Email','Contact No.','Address','Position','Date Employed','Status');
-        foreach($employees as $employee){
-            $employees_array[] = array(
-                'Employee Name' => $employee->name,
-                'Email' => $employee->email,
-                'Contact No.' => $employee->contact,
-                'Address' => $employee->address,
-                'Position' => $employee->position,
-                'Date Employed' => $employee->date_employed,
-                'Status' => $employee->status,
-            );
-        }
- 
- 
-        Excel::create('Employees', function($excel) use ($employees_array){
-         $excel->setTitle('Employees');
-         $excel->sheet('Employees', function($sheet) use ($employees_array){
-         $sheet->fromArray($employees_array, null, 'A1', false, false);
-         });
-        })->download('xlsx');
-   }
+    public function repair()
+    {
+       
+        $repairs = Repair::with('branches')->where('status','active')->orderBy('name')->paginate(10);
+        return view('admin.repair',['repairs'=>$repairs]);
+    }
+    
+    public function create_repair(Request $request)
+    {
+        $input = request()->validate([
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z,. ]+$/u|unique:repairs|',
+            'contact' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:7|unique:repairs',
+            'address' => 'required|',
+           'email' => 'required|string|email|max:255|unique:repairs|unique:admins',
+           'password' => 'required|string|min:6|',
+          
+
+       ], [
+           'name.regex'=>'Name contains invalid character!',
+           'contact.regex'=>'Invalid contact!'
+       ]);
+
+   
+       $repair = new Repair();
+       $repair->role = 'repairman';
+       $repair->branch_id = $request->branch;
+       $repair->name = $request->name;
+       $repair->email=$request->email;
+       $repair->contact=$request->contact;
+       $repair->address=$request->address;
+       $repair->password = Hash::make($request->password);
+       $repair->status = "active";
+       $repair->save();
+       $request->session()->flash('alert-success', 'Account Successfully Created!');
+       return redirect()->back();
+    }
+
+    public function delete_repair($id,Request $request)
+    {
+        $repair = Repair::find($id);
+        $repair->status = 'inactive';
+        $repair->save();
+        $request->session()->flash('alert-success', 'Account successfully removed!');
+        return redirect()->back();
+    }
+
+    public function tech()
+    {
+        $techsupports = Techsupport::where('status','active')->orderBy('name')->paginate(10);
+        return view('admin.tech',['techsupports'=>$techsupports]);
+    }
+    
+    public function create_tech(Request $request)
+    {
+        $input = request()->validate([
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z,. ]+$/u|unique:techsupports|',
+            'contact' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:7|unique:techsupports|',
+           'email' => 'required|string|email|max:255|unique:techsupports|unique:techsupports',
+           'password' => 'required|string|min:6|',
+          
+
+       ], [
+           'name.regex'=>'Name contains invalid character!',
+           'contact.regex'=>'Invalid contact!'
+       ]);
+
+   
+       $tech = new Techsupport();
+       $tech->role = "techsupport";
+       $tech->name = $request->name;
+       $tech->email=$request->email;
+       $tech->contact=$request->contact;
+       $tech->password = Hash::make($request->password);
+       $tech->status = "active";
+       $tech->save();
+       $request->session()->flash('alert-success', 'Account Successfully Created!');
+       return redirect()->back();
+    }
+
+    public function delete_tech($id,Request $request)
+    {
+        $tech = Techsupport::find($id);
+        $tech->status = 'inactive';
+        $tech->save();
+        $request->session()->flash('alert-success', 'Account successfully removed!');
+        return redirect()->back();
+    }
 
 
-   public function edit_employee($id,Request $request)
-   {
-    $input = request()->validate([
-     
-        'pic' => 'mimes:jpeg,jpg,png,bmp,gif,tif,tiff|max:50000|nullable',
-        'name' => 'required|string|max:255',
-        'email' => 'string|max:255|email|nullable',
-        'contact' => 'max:255|nullable',
-        'address'=> 'string|max:255|nullable',
-        'position'=> 'required|string',
-        'date_employed'=> 'required',
-        'status'=> 'required|string',
-    ], [
+    public function show_brand()
+    {
+        $brands = Brand::where('status','=','active')->orderBy('name')->paginate(10);
+        return view('admin.brand',['brands'=>$brands]);
+    }
 
-    ]);
+    public function create_brand(Request $request)
+    {
+        $input = request()->validate([
+            'name' => 'required|string|max:255|unique:brands',
+          
 
-    if ($request->hasFile('pic')) {
+       ], [
+
+       ]);
+
+   
+       $brand = new Brand();
+       $brand->name = $request->name;
+       $brand->status = "active";
+       $brand->save();
+       $request->session()->flash('alert-success', 'Brand Successfully Created!');
+       return redirect()->back();
+    }
+
+    public function delete_brand($id,Request $request)
+    {
+        $brand = Brand::find($id);
+        $brand->status = 'inactive';
+        $brand->save();
+        $request->session()->flash('alert-success', 'Brand successfully removed!');
+        return redirect()->back();
+    }
+
+
+    public function edit_brand($id,Request $request)
+    {
+        $brand = Brand::find($id);
+        $brand->name = $request->name;
+        $brand->save();
+        $request->session()->flash('alert-success', 'Brand successfully updated!');
+        return redirect()->back();
+    }
+
+
+    public function show_branch()
+    {
+        $branches = Branch::where('status','=','active')->orderBy('name')->paginate(10);
+        return view('admin.branch',['branches'=>$branches]);
+    }
+
+    public function create_branch(Request $request)
+    {
+        $input = request()->validate([
+            'name' => 'required|string|max:255|unique:branches',
+          
+
+       ], [
+
+       ]);
+
+   
+       $branch = new Branch();
+       $branch->name = $request->name;
+       $branch->status = "active";
+       $branch->address = $request->address;
+       $branch->save();
+       $request->session()->flash('alert-success', 'Branch Successfully Added!');
+       return redirect()->back();
+    }
+
+    public function delete_branch($id,Request $request)
+    {
+        $branch = Branch::find($id);
+        $branch->status = 'inactive';
+        $branch->save();
+        $request->session()->flash('alert-success', 'Branch successfully removed!');
+        return redirect()->back();
+    }
+
+
+    public function edit_branch($id,Request $request)
+    {
+        $branch = Branch::find($id);
+        $branch->name = $request->name;
+        $branch->address = $request->address;
+        $branch->save();
+        $request->session()->flash('alert-success', 'Branch successfully updated!');
+        return redirect()->back();
+    }
+
+
+
+    public function show_product()
+    {
+        $products = Product::with('brands')->where('status','=','available')->orderBy('name')->paginate(10);
+        $brands = Brand::where('status','=','active')->orderBy('name')->paginate(10);
+        return view('admin.product',['brands'=>$brands,'products'=>$products]);
+    }
+
+    public function create_product(Request $request)
+    {
+        $input = request()->validate([
+            'name' => 'required|string|max:255',
+            'brand' => 'required|string|max:255',
+            'price' => 'required|string|max:255',
+            'desc' => 'required|string|',
+            'pic' => 'mimes:jpeg,jpg,png,bmp,gif,tif,tiff|max:50000|',
+
+       ], [
+
+       ]);
+
+       if ($request->hasFile('pic')) {
         $filenameWithExt = $request->file('pic')->getClientOriginalName();
         $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
         $extension = $request->file('pic')->getClientOriginalExtension();
@@ -138,357 +294,202 @@ class AdminController extends Controller
         $path = $request->file('pic')->storeAs('public/images',$fileNametoStore);
         
     }
-  
-
-        $employee = Employee::find($id);
-        $employee->name = $request->name;
-        $employee->email = $request->email;
-        $employee->contact = $request->contact;
-        $employee->address = $request->address;
-        $employee->position = $request->position;
-        $employee->date_employed = $request->date_employed;
-        $employee->status = $request->status;
-        if ($request->hasFile('pic')) {
-        $employee->pic = $fileNametoStore;
-        }
-        $employee->save();
-        $request->session()->flash('alert-success', 'Employee successfully updated!');
-        return redirect()->back();
-   }
-
-
-   public function remove_employee($id,Request $request)
-   {
-       $employee = Employee::find($id);
-       $employee->status = 'N/A';
-       $employee->save();
-       $request->session()->flash('alert-success', 'Employee successfully removed!');
-       return redirect()->back();
-   }
-
-
-
-
-
-   public function job()
-   {
-       $jobs = Job::orderBy('title')->paginate(10);
-       return view('admin.job',['jobs'=>$jobs]);
-   }
-
-   public function add_job(Request $request)
-   {
-       $input = request()->validate([
-    
    
-           'title' => 'required|string|max:255',
-           'exp' => 'required',
-           'description' => 'string|required',
-           'requirement' => 'string|required',
-           'qualification'=> 'string|required',
-           'salary'=> 'nullable|max:255',
+       $product = new Product();
+       $product->name = $request->name;
+       $product->brand_id = $request->brand;
+       $product->price = $request->price;
+       $product->description = $request->desc;
+       $product->status = "available";
+       $product->pic = $fileNametoStore;
+       $product->save();
+       $request->session()->flash('alert-success', 'Product Successfully Added!');
+       return redirect()->back();
+    }
+
+    public function delete_product($id,Request $request)
+    {
+        $products = Product::find($id);
+        $products->status = 'unavailable';
+        $products->save();
+        $request->session()->flash('alert-success', 'Product successfully removed!');
+        return redirect()->back();
+    }
+
+
+    public function edit_product($id,Request $request)
+    {
+        $input = request()->validate([
+            'name' => 'required|string|max:255',
+            'brand' => 'required|string|max:255',
+            'price' => 'required|string|max:255',
+            'desc' => 'required|string|',
+            'pic' => 'mimes:jpeg,jpg,png,bmp,gif,tif,tiff|max:50000|',
 
        ], [
 
        ]);
 
+       if ($request->hasFile('pic')) {
+        $filenameWithExt = $request->file('pic')->getClientOriginalName();
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        $extension = $request->file('pic')->getClientOriginalExtension();
+        $fileNametoStore = $filename.'_'.time().'.'.$extension;
+        $path = $request->file('pic')->storeAs('public/images',$fileNametoStore);
+        
+    }
 
-
-           $job = new Job();
-           $job->title = $request->title;
-           $job->description = $request->description;
-           $job->requirement = $request->requirement;
-           $job->qualification = $request->qualification;
-           $job->salary = $request->salary;
-           $job->exp = $request->exp;
-           $job->save();
-           $request->session()->flash('alert-success', 'Job successfully added!');
-           return redirect()->back();
-   }
-
-
-   public function search_job(Request $request)
-   {
-       $search = $request->search;
-       $jobs = Job::where('title','=',$search)->orderBy('title')->paginate(10);
-
-       return view('admin.job',['jobs'=>$jobs]);
-   }
-
-   public function job_excel(){
-    $jobs = Job::orderBy('title')->get();
-    $jobs_array[] = array('Job Title','Job Description','Experience','Requirements','Qualifications','Salary','Date Created');
-    foreach($jobs as $job){
-        $jobs_array[] = array(
-            'Job Title' => $job->title,
-            'Job Description' => $job->description,
-            'Experience' => $job->exp,
-            'Requirements' => $job->requirement,
-            'Qualifications' => $job->qualification,
-            'Salary' => $job->salary,
-            'Date Created' => $job->updated_at,
-        );
+        $product = Product::find($id);
+       $product->name = $request->name;
+       $product->brand_id = $request->brand;
+       $product->price = $request->price;
+       $product->description = $request->desc;
+       $product->status = "available";
+       $product->pic = $fileNametoStore;
+       $product->save();
+       $request->session()->flash('alert-success', 'Product Successfully Updated!');
+       return redirect()->back();
     }
 
 
-    Excel::create('Jobs', function($excel) use ($jobs_array){
-     $excel->setTitle('Jobs');
-     $excel->sheet('Jobs', function($sheet) use ($jobs_array){
-     $sheet->fromArray($jobs_array, null, 'A1', false, false);
-     });
-    })->download('xlsx');
-}
-
-
-public function destroy_job($id, Request $request)
-{
-    $jobs = Job::find($id);
-    if(  $jobs->delete()){
-        $request->session()->flash('alert-success', 'Job successfully deleted!');
-        return redirect()->back();
-    }
+    public function inventory(Request $request)
+    {
+        $cat = $request->category;
+        $inventory = Inventory::with('category')->where('category_id',$cat)->get();
+        $category = Category::get();
   
-   
-}
-
-
-    public function application($id)
-    {
-        $jobs = Job::where('id',$id)->get();
-        $application = Application::with('jobs')->where('id',$id)->orderBy('created_at')->paginate(10);
-        return view('admin.application',['application'=>$application,'jobs'=>$jobs]);
+        return view('admin.inventory',['category'=>$category,'inventory'=>$inventory]);
     }
 
-    public function destroy_application($id, Request $request)
-    {
-        $application = Application::find($id);
-        if(  $application->delete()){
-            $request->session()->flash('alert-success', 'Applicant successfully deleted!');
-            return redirect()->back();
-        }
-      
-       
-    }
-
-    public function project()
-    {
-        $projects = Project::where('remove','=',NULL)->orderBy('name')->paginate(10);
-        return view('admin.website-project',['projects'=>$projects]);
-    }
-
-    public function add_project(Request $request)
+    public function category(Request $request)
     {
         $input = request()->validate([
-    
-            'pic' => 'mimes:jpeg,jpg,png,bmp,gif,tif,tiff|max:50000|required',
-            'name' => 'required|string|max:255',
-            'description' => 'string|required',
-            'budget' => 'required',
-            'date_started' => 'required',
-            'date_finish'=> 'required',
-            'percent'=> 'required',
- 
-        ], [
- 
-        ]);
- 
-        if ($request->hasFile('pic')) {
-            $filenameWithExt = $request->file('pic')->getClientOriginalName();
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('pic')->getClientOriginalExtension();
-            $fileNametoStore = $filename.'_'.time().'.'.$extension;
-            $path = $request->file('pic')->storeAs('public/images',$fileNametoStore);
-            
-        }
-            $projects = new Project();
-            $projects->pic = $fileNametoStore;
-            $projects->name = $request->name;
-            $projects->description= $request->description;
-            $projects->budget= $request->budget;
-            $projects->date_started= $request->date_started;
-            $projects->date_finish= $request->date_finish;
-            $projects->percent= $request->percent;
-            $projects->status= $request->status;
-            $projects->save();
-            $request->session()->flash('alert-success', 'Project successfully added!');
-            return redirect()->back();
+            'name' => 'required|string|max:255|unique:category|',
 
+          
+
+       ], [
+     
+       ]);
+
+        $category = new Category();
+        $category->name = $request->name;
+        $category->save();
+        $request->session()->flash('alert-success', 'Category Successfully Created!');
+        return redirect()->back();
     }
 
-    public function search_project(Request $request)
-    {
-        $search = $request->search;
-        $projects = Project::where('name',$search)
-        ->where('remove','=',NULL)
-        ->orderBy('name')->paginate(10);
-        return view('admin.website-project',['projects'=>$projects]);
-    }
 
-    public function project_excel(){
-        $projects = Project::where('remove','=',NULL)->orderBy('name')->get();
-        $projects_array[] = array('Project Title','Description','Date Started','Date Finish','% of completion','Status');
-        foreach($projects as $project){
-            $projects_array[] = array(
-                'Project Title' => $project->name,
-                'Description' => $project->description,
-                'Date Started' => $project->date_started,
-                'Date Finish' => $project->date_finish,
-                '% of completion' => $project->percent,
-                'Status' => $project->status,
-            );
-        }
-    
-    
-        Excel::create('Projects', function($excel) use ($projects_array){
-         $excel->setTitle('Projects');
-         $excel->sheet('Projects', function($sheet) use ($projects_array){
-         $sheet->fromArray($projects_array, null, 'A1', false, false);
-         });
-        })->download('xlsx');
-    }
 
-    public function edit_project($id, Request $request)
+    public function inventory_product(Request $request)
     {
         $input = request()->validate([
-    
-            'name' => 'required|string|max:255',
-            'description' => 'string|required',
-            'budget' => 'required',
-            'date_started' => 'required',
-            'date_finish'=> 'required',
-            'percent'=> 'required',
- 
-        ], [
- 
-        ]);
- 
-        if ($request->hasFile('pic')) {
-            $filenameWithExt = $request->file('pic')->getClientOriginalName();
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('pic')->getClientOriginalExtension();
-            $fileNametoStore = $filename.'_'.time().'.'.$extension;
-            $path = $request->file('pic')->storeAs('public/images',$fileNametoStore);
-            
-        }
+            'name' => 'required|string|max:255|unique:category|',
+            'description' => 'required|',
+            'price' => 'required|',
+            'qty' => 'required|',
+            'image' => 'mimes:jpeg,jpg,png,bmp,gif,tif,tiff|max:50000|required',
+       ], [
+     
+       ]);
 
-        $projects = Project::find($id);
-        if ($request->hasFile('pic')) {
-        $projects->pic = $fileNametoStore;
-        }
-        $projects->name = $request->name;
-        $projects->description= $request->description;
-        $projects->budget= $request->budget;
-        $projects->date_started= $request->date_started;
-        $projects->date_finish= $request->date_finish;
-        $projects->percent= $request->percent;
-        $projects->status= $request->status;
-        $projects->save();
-        $request->session()->flash('alert-success', 'Project successfully updated!');
-        return redirect()->back();
+       if ($request->hasFile('image')) {
+        $filenameWithExt = $request->file('image')->getClientOriginalName();
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        $extension = $request->file('image')->getClientOriginalExtension();
+        $fileNametoStore = $filename.'_'.time().'.'.$extension;
+        $path = $request->file('image')->storeAs('public/images',$fileNametoStore);
+        
     }
 
-    public function remove_project($id, Request $request)
-    {
-        $projects = Project::find($id);
-        $projects->remove = 1;
-        $projects->save();
-        $request->session()->flash('alert-success', 'Project successfully removed!');
+        $inventory = new Inventory();
+        $inventory->category_id = $request->category;
+        $inventory->name = $request->name;
+        $inventory->description = $request->description;
+        $inventory->price = $request->price;
+        $inventory->qty = $request->qty;
+        $inventory->image = $fileNametoStore;
+        $inventory->save();
+        $request->session()->flash('alert-success', 'Product Successfully Created!');
         return redirect()->back();
     }
 
 
-    public function contact()
+    public function order()
     {
-        $contacts = Contact::orderBy('created_at')->paginate(10);
-        return view('admin.contact',['contacts'=>$contacts]);
+        $orders = Order::with('inventory','repairs')->orderBy('created_at','asc')->paginate(10);
+        return view('admin.order',['orders'=>$orders]);
     }
 
-    public function destroy_contact($id, Request $request)
+
+    public function request()
     {
-        $contacts = Contact::find($id);
-    if(  $contacts->delete()){
-        $request->session()->flash('alert-success', 'Message successfully deleted!');
-        return redirect()->back();
-    }
+        $request_inventory = Request_Inventory::with('repairs')->orderBy('created_at','asc')->paginate(10);
+        return view('admin.request',['request_inventory'=>$request_inventory]);
     }
 
 
-    public function archive_employee()
-    {
-        $employees = Employee::orderBy('name')->paginate(10);
-        return view('admin.archive-employee',['employees'=>$employees]);
-    }
-
-    public function search_archive_employee(Request $request)
+    public function search_admin(Request $request)
     {
         $search = $request->search;
-        $employees = Employee::where('name','=',$search)
+        $admins = Admin::where('name','=',$search)
+        ->where('status','=','active')
         ->orderBy('name')->paginate(10);
 
-        return view('admin.archive-employee',['employees'=>$employees]);
+        return view('admin.admins',['admins'=>$admins]);
     }
 
-    public function archive_employee_excel(){
-        $employees = Employee::orderBy('name')->get();
-        $employees_array[] = array('Employee Name','Email','Contact No.','Address','Position','Date Employed','Status');
-        foreach($employees as $employee){
-            $employees_array[] = array(
-                'Employee Name' => $employee->name,
-                'Email' => $employee->email,
-                'Contact No.' => $employee->contact,
-                'Address' => $employee->address,
-                'Position' => $employee->position,
-                'Date Employed' => $employee->date_employed,
-                'Status' => $employee->status,
-            );
-        }
- 
- 
-        Excel::create('Employees', function($excel) use ($employees_array){
-         $excel->setTitle('Employees');
-         $excel->sheet('Employees', function($sheet) use ($employees_array){
-         $sheet->fromArray($employees_array, null, 'A1', false, false);
-         });
-        })->download('xlsx');
-   }
-
-
-    public function archive_project()
-    {
-        $projects = Project::orderBy('name')->paginate(10);
-        return view('admin.archive-project',['projects'=>$projects]);
-    }
-
-    
-    public function archive_search_project(Request $request)
+    public function search_tech(Request $request)
     {
         $search = $request->search;
-        $projects = Project::where('name',$search)
+        $techsupports = Techsupport::where('name','=',$search)
+        ->where('status','=','active')
         ->orderBy('name')->paginate(10);
-        return view('admin.archive-project',['projects'=>$projects]);
+
+        return view('admin.tech',['techsupports'=>$techsupports]);
     }
 
-    public function archive_project_excel(){
-        $projects = Project::orderBy('name')->get();
-        $projects_array[] = array('Project Title','Description','Date Started','Date Finish','% of completion','Status');
-        foreach($projects as $project){
-            $projects_array[] = array(
-                'Project Title' => $project->name,
-                'Description' => $project->description,
-                'Date Started' => $project->date_started,
-                'Date Finish' => $project->date_finish,
-                '% of completion' => $project->percent,
-                'Status' => $project->status,
-            );
-        }
+    public function search_repair(Request $request)
+    {
+        $search = $request->search;
+       $repairs = Repair::with('branches')->where('name','=',$search)->where('status','active')->orderBy('name')->paginate(10);
+        return view('admin.repair',['repairs'=>$repairs]);
+    }
+
+    public function search_brand(Request $request)
+    {
+        $search = $request->search;
+       $brands = Brand::where('name','=',$search)->where('status','=','active')->orderBy('name')->paginate(10);
+       return view('admin.brand',['brands'=>$brands]);
+    }
     
-    
-        Excel::create('Projects', function($excel) use ($projects_array){
-         $excel->setTitle('Projects');
-         $excel->sheet('Projects', function($sheet) use ($projects_array){
-         $sheet->fromArray($projects_array, null, 'A1', false, false);
-         });
-        })->download('xlsx');
+    public function search_product(Request $request)
+    {
+        $search = $request->search;
+        $products = Product::with('brands')->where('name',$search)->where('status','=','available')->orderBy('name')->paginate(10);
+        $brands = Brand::where('status','=','active')->orderBy('name')->paginate(10);
+        return view('admin.product',['brands'=>$brands,'products'=>$products]);
+    }
+
+    public function search_branch(Request $request)
+    {
+        $search = $request->search;
+        $branches = Branch::where('name',$search)->where('status','=','active')->orderBy('name')->paginate(10);
+        return view('admin.branch',['branches'=>$branches]);
+    }
+    public function search_order(Request $request)
+    {
+        $search = $request->search;
+        $inventory = Inventory::where('name',$search)->get();
+        $orders = Order::with('inventory','repairs')->where('inventory_id',$inventory->get(0)->id)->orderBy('created_at','asc')->paginate(10);
+        return view('admin.order',['orders'=>$orders]);
+    }
+
+    public function search_request(Request $request)
+    {
+        $search = $request->search;
+        $request_inventory = Request_Inventory::with('repairs')->where('name',$search)->orderBy('created_at','asc')->paginate(10);
+        return view('admin.request',['request_inventory'=>$request_inventory]);
     }
 
 
@@ -501,20 +502,31 @@ public function destroy_job($id, Request $request)
     public function account_update(Request $request)
     {
         $this->validate($request, [
-            'old_password' => 'required|exists:admins,password',
+            'old_password' => 'required',
             'password' => 'required|confirmed'
         ], [
   
 
         ]);
+       
         $id = Auth::user()->id;
-        $admin = Admin::find($id);
-        $admin->name = $request->name;
-        $admin->email = $request->email;
-        $admin->password = Hash::make($request['password']);
-        $admin->save();
-        $request->session()->flash('alert-success', 'Account successfully updated!');
-        return redirect()->route('add-admin-index');
+        $admins = Admin::where('id',$id)->get();
+     
+        if (Hash::check($request->old_password, $admins->get(0)->password)) {
+            $admin = Admin::find($id);
+            $admin->name = $request->name;
+            $admin->email = $request->email;
+            $admin->password = Hash::make($request['password']);
+            $admin->save();
+            $request->session()->flash('alert-success', 'Account successfully updated!');
+            return redirect()->back();
+        }
+        else{
+            $request->session()->flash('alert-danger', 'Account not updated!');
+            return redirect()->back();
+        }
+     
+     
     }
 
 }

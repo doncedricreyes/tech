@@ -25,7 +25,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/employees';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -41,6 +41,6 @@ class LoginController extends Controller
     public function logout()
     {
         Auth::guard('web')->logout();
-        return redirect('/employees');
+        return redirect('/');
     }
 }
