@@ -59,7 +59,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <ul class="dropdown-menu">
               <li class="user-footer" >
                 <div class="pull-left">
-                  <a href="/admin/account" class="btn btn-default btn-flat">Account</a>
+                  <a href="/repair/account" class="btn btn-default btn-flat">Account</a>
                 </div>
                 <div class="pull-right">
                   <a href="/repair/logout" class="btn btn-default btn-flat">Sign out</a>
@@ -84,18 +84,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <ul class="sidebar-menu" data-widget="tree">
           <!-- Optionally, you can add icons to the links -->
 
-            <li class="{{Request::is('admin/employees') || Request::is('admin') ? 'active' : ''}} treeview" >
-              <a href="/admin/employees"><i class="fa fa-users"></i> <span>Employees</span>
-                <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
-                  </span>
-              </a>
-              <ul class="treeview-menu">
-                <li class="{{Request::is('admin/employees/admins') ? 'active' : ''}}"><a href="/admin/employees/admins"><i class="fa fa-user"></i>Admins</a></li>
-                <li class="{{Request::is('admin/employees/techsupport') ? 'active' : ''}}"><a href="/admin/employees/techsupports"><i class="fa fa-user"></i>Tech Supports</a></li>
-                <li class="{{Request::is('admin/employees/repairmen') ? 'active' : ''}}"><a href="/admin/employees/repairmen"><i class="fa fa-user"></i>Repairmen</a></li>
-              </ul>
-            </li>
+ 
           <li class="{{Request::is('repair/repairs') ? 'active' : ''}}"><a href="/repair/repairs"><i class="fa fa-briefcase"></i> <span>Repairs</span></a></li>
          
          

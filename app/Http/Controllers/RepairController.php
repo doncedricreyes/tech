@@ -137,4 +137,68 @@ class RepairController extends Controller
         $request_inventory = Request_Inventory::with('repairs')->where('repair_id',auth::user()->id)->orderBy('created_at','asc')->paginate(10);
         return view('repair.request',['request_inventory'=>$request_inventory]);
     }
+
+    public function account()
+    {
+        $repairs = Repair::where('id','=',Auth::user()->id)->get();
+        return view('repair.account',['repairs'=>$repairs]);
+    }
+
+    public function account_update(Request $request)
+    {
+        $this->validate($request, [
+            'old_password' => 'required',
+            'password' => 'required|confirmed',
+            'email' => 'required|',
+            'name' => 'required|',
+            'contact' => 'required|',
+            'address' => 'required|',
+        ], [
+  
+
+        ]);
+       
+        $id = Auth::user()->id;
+        $repairs = Repair::where('id',$id)->get();
+     
+        if (Hash::check($request->old_password, $repairs->get(0)->password)) {
+            $repair = Repair::find($id);
+            $repair->name = $request->name;
+            $repair->email = $request->email;
+            $repair->contact = $request->contact;
+            $repair->address = $request->address;
+            $repair->password = Hash::make($request['password']);
+            $repair->save();
+            $request->session()->flash('alert-success', 'Account successfully updated!');
+            return redirect()->back();
+        }
+        else{
+            $request->session()->flash('alert-danger', 'Account not updated!');
+            return redirect()->back();
+        }
+     
+     
+    }
+
+    public function search_repair(Request $request)
+    {
+        $search = $request->search;
+        $ticket_repairs = Ticket_Repair::with('tickets','repairs')->where('ticket_id',$search)->where('repair_id',Auth::user()->id)->orderBy('created_at','asc')->paginate(10);
+        return view('repair.repair',['ticket_repairs'=>$ticket_repairs]);
+    }
+
+    public function search_order(Request $request)
+    {
+        $search = $request->search;
+        $inventory = Inventory::where('name',$search)->get();
+        $orders = Order::with('inventory','repairs')->where('inventory_id',$inventory->get(0)->id)->where('repair_id',auth::user()->id)->orderBy('created_at','asc')->paginate(10);
+        return view('repair.order',['orders'=>$orders]);
+    }
+
+    public function search_request(Request $request)
+    {
+        $search = $request->search;
+        $request_inventory = Request_Inventory::with('repairs')->where('name',$search)->where('repair_id',auth::user()->id)->orderBy('created_at','asc')->paginate(10);
+        return view('repair.request',['request_inventory'=>$request_inventory]);
+    }
 }

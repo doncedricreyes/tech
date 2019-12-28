@@ -30,7 +30,7 @@ class RepairLoginController extends Controller
         //attempt to login
         if (Auth::guard('repair')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             
-            return redirect()->intended(route('repair.dashboard'));
+            return redirect('/repair/repairs');
         }
            
         return redirect()->back()->withInput($request->only('email','remember'));

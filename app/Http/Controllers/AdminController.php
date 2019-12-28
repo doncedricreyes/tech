@@ -529,4 +529,14 @@ class AdminController extends Controller
      
     }
 
+    
+    public function request_status($id, Request $request)
+    {
+        
+        $requests = Request_Inventory::find($id);
+        $requests->status = $request->status;
+        $requests->save();
+       return redirect()->back();
+    }
+
 }

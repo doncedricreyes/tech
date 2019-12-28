@@ -147,6 +147,34 @@ class TechsupportController extends Controller
         return redirect()->back();
     }
 
+    
+    public function search_pending(Request $request)
+    {
+        $search = $request->search;
+        
+        $id = auth::user()->id;
+        $tickets = Ticket::where('id',$search)->where('techsupport_id',$id)->where('status','pending')->orderBy('created_at','asc')->paginate(10);
+        return view('techsupport.pending',['tickets'=>$tickets]);
+    }
+
+    public function search_open(Request $request)
+    {
+        $search = $request->search;
+        
+        $id = auth::user()->id;
+        $tickets = Ticket::where('id',$search)->where('techsupport_id',$id)->where('status','open')->orderBy('created_at','asc')->paginate(10);
+        $ticket_repairs = Ticket_Repair::with('tickets','repairs')->get();
+        return view('techsupport.open',['tickets'=>$tickets,'ticket_repairs'=>$ticket_repairs]);
+    }
+
+    public function search_close(Request $request)
+    {
+        $search = $request->search;
+        
+        $id = auth::user()->id;
+        $tickets = Ticket::where('id',$search)->where('techsupport_id',$id)->where('status','closed')->orderBy('created_at','asc')->paginate(10);
+        return view('techsupport.close',['tickets'=>$tickets]);
+    }
 
     public function account()
     {

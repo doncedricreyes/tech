@@ -81,6 +81,7 @@ Route::get('/inventory/orders','AdminController@order');
 Route::get('/inventory/orders/search','AdminController@search_order')->name('search_order');
 Route::get('/inventory/requests','AdminController@request');
 Route::get('/inventory/requests/search','AdminController@search_request')->name('search_request');
+Route::put('/inventory/requests/{id}','AdminController@request_status')->name('request_status');
 });
 
 Route::prefix('techsupport')->group(function()
@@ -97,10 +98,13 @@ Route::get('account','TechsupportController@account');
 Route::put('account','TechsupportController@account_update')->name('update.techsupport');
 Route::get('/tickets/pending','TechsupportController@pending')->name('techsupport.pending');
 Route::put('/tickets/pending/{id}','TechsupportController@pending_status')->name('techsupport.pending.ticket_status');
+Route::get('/tickets/pending/search','TechsupportController@search_pending')->name('search_pending');
 Route::get('/tickets/open','TechsupportController@open')->name('techsupport.open');
 Route::put('/tickets/open/{id}','TechsupportController@open_status')->name('techsupport.open.ticket_status');
+Route::get('/tickets/open/search','TechsupportController@search_open')->name('search_open');
 Route::get('/tickets/closed','TechsupportController@close')->name('techsupport.close');
 Route::put('/tickets/closed/{id}','TechsupportController@close_status')->name('techsupport.close.ticket_status');
+Route::get('/tickets/closed/search','TechsupportController@search_close')->name('search_close');
 Route::get('/tickets/{id}','TechsupportController@ticket');
 Route::post('/tickets/{id}/message','TechsupportController@send_message')->name('techsupport.message');
 Route::get('/tickets/repairs/{id}','TechsupportController@repair');
@@ -118,15 +122,20 @@ Route::post('/password/email', 'Auth\RepairForgotPasswordController@sendResetLin
 Route::get('/password/reset', 'Auth\RepairForgotPasswordController@showLinkRequestForm')->name('repair.password.request');
 Route::post('/password/reset', 'Auth\RepairResetPasswordController@reset');
 Route::get('/password/reset/{token}', 'Auth\RepairResetPasswordController@showResetForm')->name('repair.password.reset');
-Route::get('/','RepairController@home')->name('repair.dashboard');
-Route::get('/repairs','RepairController@repairs');
+Route::get('account','RepairController@account');
+Route::put('account','RepairController@account_update')->name('update.repair');
+Route::get('/','RepairController@home');
+Route::get('/repairs','RepairController@repairs')->name('repair.dashboard');
 Route::get('/repairs/{id}','RepairController@repair_message');
 Route::post('/repairs/{id}','RepairController@send_repair_message')->name('repair.repair_message');
+Route::get('/search/repairs','RepairController@search_repair')->name('repair_search');
 Route::get('/inventory','RepairController@inventory')->name('repair.inventory');
 Route::post('/inventory/order/{id}','RepairController@order')->name('repair.order');
 Route::post('/inventory/request','RepairController@request')->name('request_inventory');
 Route::get('/inventory/orders','RepairController@view_order');
+Route::get('/inventory/orders/search','RepairController@search_order')->name('order_search');
 Route::get('/inventory/requests','RepairController@view_request');
+Route::get('/inventory/requests/search','RepairController@search_request')->name('request_search');
 });
 
 Route::prefix('customer')->group(function()

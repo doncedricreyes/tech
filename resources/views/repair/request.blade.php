@@ -28,8 +28,8 @@
             <legend class="tbl-title">My Requests</legend>
             <div class="tbl-widg">
                 <div class="form-group">
-                    <form action = "" role="search" method="get"enctype="multipart/form-data">
-                      <input type="text" class="form-control" name="search" id="search" placeholder="Search">
+                    <form action = "{{route('request_search')}}" role="search" method="get"enctype="multipart/form-data">
+                      <input type="text" class="form-control" name="search" id="search" placeholder="Search by product">
                     </form>
                   </div>
                 <div>

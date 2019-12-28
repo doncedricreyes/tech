@@ -28,8 +28,8 @@
             <legend class="tbl-title">My Repairs</legend>
             <div class="tbl-widg">
                 <div class="form-group">
-                    <form action = "" role="search" method="get"enctype="multipart/form-data">
-                      <input type="text" class="form-control" name="search" id="search" placeholder="Search">
+                    <form action = "{{route('repair_search')}}" role="search" method="get"enctype="multipart/form-data">
+                      <input type="text" class="form-control" name="search" id="search" placeholder="Search by ticket #">
                     </form>
                   </div>
                 <div>
@@ -57,7 +57,7 @@
             @foreach($ticket_repairs as $i)
             <tr>
                 <td><h6>{{ ($ticket_repairs ->currentpage()-1) * $ticket_repairs ->perpage() + $loop->index + 1 }}</h6></td>
-               <td><a href="/repair/repairs/{{$i->ticket_id}}"> <h6>{{$i->id}}</h6></a></td>
+               <td><a href="/repair/repairs/{{$i->ticket_id}}"> <h6>{{$i->ticket_id}}</h6></a></td>
                <td><h6>{{$i->tickets->get(0)->products->get(0)->brands->name}}</h6></td>
                <td><h6>{{$i->tickets->get(0)->products->get(0)->name}}</h6></td>
         

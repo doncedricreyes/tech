@@ -28,8 +28,8 @@
             <legend class="tbl-title">Closed Tickets</legend>
             <div class="tbl-widg">
                 <div class="form-group">
-                    <form action = "" role="search" method="get"enctype="multipart/form-data">
-                      <input type="text" class="form-control" name="search" id="search" placeholder="Search">
+                    <form action = "{{route('search_close')}}" role="search" method="get"enctype="multipart/form-data">
+                      <input type="text" class="form-control" name="search" id="search" placeholder="Search by ticket #">
                     </form>
                   </div>
                 <div>

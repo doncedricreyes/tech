@@ -30,7 +30,7 @@ class TechsupportLoginController extends Controller
         //attempt to login
         if (Auth::guard('techsupport')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             
-            return redirect()->intended(route('techsupport.pending'));
+            return redirect('/techsupport/tickets/pending');
         }
            
         return redirect()->back()->withInput($request->only('email','remember'));

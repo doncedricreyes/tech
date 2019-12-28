@@ -69,12 +69,28 @@
                <td><h6>{{$i->price}}</h6></td>
                <td><h6>{{$i->qty}}</h6></td>
                <td><h6>{{$i->repairs->get(0)->name}}</h6></td>
-               @if($i->status == 'approved')
-               <td><span class="btn btn-success">{{$i->status}}</span></td>
-               @endif
-               @if($i->status == 'pending')
-               <td><span class="btn btn-warning">{{$i->status}}</span></td>
-               @endif
+               <form action="{{route('request_status',$i->id)}}" method="post" enctype="multipart/form-data">
+                {{csrf_field() }}
+                <input name="_method" type="hidden" value="PUT">
+               <td><h6><select  name="status" id="status" onchange="this.form.submit()">
+                @if($i->status == 'pending')
+                <option selected value value="pending"> Pending </option>
+                @endif
+                @if($i->status == 'approved')
+              <option selected value value="approved">Approved</option>
+              @endif
+              @if($i->status == 'rejected')
+              <option selected value="" value="rejected">Rejected</option>
+              @endif
+
+            <option value="pending"> Pending </option>
+            <option value="approved">Approved</option>        
+            <option value="rejected">Rejected</option>
+            
+            </select></h6></td>
+               </form>
+        
+               
         </tr>
 @endforeach
 
