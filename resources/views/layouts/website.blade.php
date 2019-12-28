@@ -42,7 +42,7 @@
               <a class="nav-link" href="/">Home</a>
           </li>
           <li class="nav-item {{Request::is('about') ? 'active' : ''}}">
-            <a class="nav-link" href="/about">About</a>
+            <a class="nav-link" href="/about">HELLO</a>
           </li>
           <li class="nav-item {{Request::is('projects') ? 'active' : ''}}">
             <a class="nav-link" href="/projects">Projects & Services</a>
