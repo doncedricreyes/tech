@@ -8,7 +8,7 @@ use Password;
 use Auth;
 use Illuminate\Http\Request;
 
-class CustomerResetPasswordController extends Controller
+class RepairResetPasswordController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -28,7 +28,7 @@ class CustomerResetPasswordController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/customer/service/tickets';
+    protected $redirectTo = '/repair/repairs';
 
     /**
      * Create a new controller instance.
@@ -37,22 +37,22 @@ class CustomerResetPasswordController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest:customer');
+        $this->middleware('guest:repair');
     }
     
     protected function broker()
     {
-        return Password::broker('customers');
+        return Password::broker('repairs');
     }
     
     protected function guard()
     {
-        return Auth::guard('customer');
+        return Auth::guard('repair');
     }
     
     public function showResetForm(Request $request, $token = null)
     {
-        return view('auth.passwords.reset-customer')->with(
+        return view('auth.passwords.reset-repair')->with(
             ['token' => $token, 'email'=> $request->email]
         );
     }

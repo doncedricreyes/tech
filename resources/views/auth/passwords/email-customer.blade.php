@@ -4,8 +4,8 @@
 @section('content')
   
 
-<p class="login-box-msg">Admin Reset Password</p>
-<form method="POST" action="{{ route('admin.password.email') }}">
+<p class="login-box-msg">Customer Reset Password</p>
+<form method="POST" action="{{ route('customer.password.email') }}">
     @csrf
   <div class="form-group has-feedback">
     <input id="email" placeholder="Email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>

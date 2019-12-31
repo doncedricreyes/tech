@@ -28,7 +28,7 @@ class TechsupportResetPasswordController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/techsupport';
+    protected $redirectTo = '/techsupport/tickets/pending';
 
     /**
      * Create a new controller instance.

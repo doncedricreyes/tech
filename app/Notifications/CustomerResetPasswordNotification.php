@@ -6,11 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use App\Notifications\MessageSubmitted;
-use App\Ticket_Message;
-use Auth;
 
-class MessageSubmitted extends Notification
+class CustomerResetPasswordNotification extends Notification
 {
     use Queueable;
     
@@ -46,12 +43,9 @@ class MessageSubmitted extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-  
-        ->subject('New Message')
-        ->greeting('Hello!')
-                    ->line('You have a new message from one of your tickets.')         
-                    ->line('Please login to view the message.')             
-                    ->action('Login', route('index_ticket'));
+                    ->line('You are receiving this email because we received a password reset request for your account.')
+                    ->action('Reset Password', route('customer.password.reset',$this->token))
+                    ->line('If you did not request a password request, no further action required.');
     }
 
     /**

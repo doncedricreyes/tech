@@ -96,9 +96,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <li class="{{Request::is('admin/employees/repairmen') ? 'active' : ''}}"><a href="/admin/employees/repairmen"><i class="fa fa-user"></i>Repairmen</a></li>
               </ul>
             </li>
-          <li class="{{Request::is('admin/brands') ? 'active' : ''}}"><a href="/admin/brands"><i class="fa fa-briefcase"></i> <span>Brands</span></a></li>
-          <li class="{{Request::is('admin/products') ? 'active' : ''}}"><a href="/admin/products"><i class="fa fa-clipboard"></i> <span>Products</span></a></li>
-          <li class="{{Request::is('admin/branches') ? 'active' : ''}}"><a href="/admin/branches"><i class="fa fa-envelope-open"></i> <span>Branches</span></a></li>
+          <li class="{{Request::is('admin/brands') ? 'active' : ''}}"><a href="/admin/brands"><i class="fa fa-clipboard"></i> <span>Brands</span></a></li>
+          <li class="{{Request::is('admin/products') ? 'active' : ''}}"><a href="/admin/products"><i class="fas fa-laptop"></i> <span>Products</span></a></li>
+          <li class="{{Request::is('admin/branches') ? 'active' : ''}}"><a href="/admin/branches"><i class="fa fa-location-arrow"></i> <span>Branches</span></a></li>
       
           <li class="{{Request::is('admin/inventory') || Request::is('admin/inventory/orders') || Request::is('admin/inventory/requests')  ? 'active' : ''}} treeview" >
             <a href="#"><i class="fa fa-archive"></i> <span>Inventory</span>
@@ -113,8 +113,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
           </li>
 
-
-          <li><a href="/admin/logout"><i class="fa fa-sign-out"></i>  <span>Logout</span></a></li>
+          <li class="{{Request::is('admin/account') ? 'active' : ''}}"><a href="/admin/account"><i class="fas fa-user"></i>  <span>Account</span></a></li>
+          <li><a href="/admin/logout"><i class="fas fa-sign-out-alt"></i>  <span>Logout</span></a></li>
         </ul>
    
 

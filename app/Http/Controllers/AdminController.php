@@ -435,8 +435,18 @@ class AdminController extends Controller
         $admins = Admin::where('name','=',$search)
         ->where('status','=','active')
         ->orderBy('name')->paginate(10);
-
-        return view('admin.admins',['admins'=>$admins]);
+       
+        if($admins->isEmpty()){
+            $request->session()->flash('alert-danger', 'User not found!');
+            return view('admin.admins',['admins'=>$admins]);
+ 
+        }
+        else{
+            $request->session()->flash('alert-success', 'User found!');
+            return view('admin.admins',['admins'=>$admins]);
+        }
+      
+    
     }
 
     public function search_tech(Request $request)
@@ -446,21 +456,51 @@ class AdminController extends Controller
         ->where('status','=','active')
         ->orderBy('name')->paginate(10);
 
-        return view('admin.tech',['techsupports'=>$techsupports]);
+        if($techsupports->isEmpty()){
+            $request->session()->flash('alert-danger', 'User not found!');
+            return view('admin.tech',['techsupports'=>$techsupports]);
+ 
+        }
+        else{
+            $request->session()->flash('alert-success', 'User found!');
+            return view('admin.tech',['techsupports'=>$techsupports]);
+        }
+     
     }
 
     public function search_repair(Request $request)
     {
         $search = $request->search;
        $repairs = Repair::with('branches')->where('name','=',$search)->where('status','active')->orderBy('name')->paginate(10);
+
+
+       if($repairs->isEmpty()){
+        $request->session()->flash('alert-danger', 'User not found!');
         return view('admin.repair',['repairs'=>$repairs]);
+
+    }
+    else{
+        $request->session()->flash('alert-success', 'User found!');
+        return view('admin.repair',['repairs'=>$repairs]);
+    }
+        
     }
 
     public function search_brand(Request $request)
     {
         $search = $request->search;
        $brands = Brand::where('name','=',$search)->where('status','=','active')->orderBy('name')->paginate(10);
-       return view('admin.brand',['brands'=>$brands]);
+       
+       if($brands->isEmpty()){
+        $request->session()->flash('alert-danger', 'Brand name not found!');
+        return view('admin.brand',['brands'=>$brands]);
+
+    }
+    else{
+        $request->session()->flash('alert-success', 'Brand name found!');
+        return view('admin.brand',['brands'=>$brands]);
+    }
+ 
     }
     
     public function search_product(Request $request)
@@ -468,28 +508,64 @@ class AdminController extends Controller
         $search = $request->search;
         $products = Product::with('brands')->where('name',$search)->where('status','=','available')->orderBy('name')->paginate(10);
         $brands = Brand::where('status','=','active')->orderBy('name')->paginate(10);
-        return view('admin.product',['brands'=>$brands,'products'=>$products]);
+        if($products->isEmpty()){
+            $request->session()->flash('alert-danger', 'Product not found!');
+            return view('admin.product',['brands'=>$brands,'products'=>$products]);
+    
+        }
+        else{
+            $request->session()->flash('alert-success', 'Product found!');
+            return view('admin.product',['brands'=>$brands,'products'=>$products]);
+        }
+    
     }
 
     public function search_branch(Request $request)
     {
         $search = $request->search;
         $branches = Branch::where('name',$search)->where('status','=','active')->orderBy('name')->paginate(10);
-        return view('admin.branch',['branches'=>$branches]);
+        if($branches->isEmpty()){
+            $request->session()->flash('alert-danger', 'Branch not found!');
+            return view('admin.branch',['branches'=>$branches]);
+    
+        }
+        else{
+            $request->session()->flash('alert-success', 'Branch found!');
+            return view('admin.branch',['branches'=>$branches]);
+        }
+
     }
     public function search_order(Request $request)
     {
         $search = $request->search;
         $inventory = Inventory::where('name',$search)->get();
         $orders = Order::with('inventory','repairs')->where('inventory_id',$inventory->get(0)->id)->orderBy('created_at','asc')->paginate(10);
-        return view('admin.order',['orders'=>$orders]);
+        if($orders->isEmpty()){
+            $request->session()->flash('alert-danger', 'Order not found!');
+            return view('admin.order',['orders'=>$orders]);
+    
+        }
+        else{
+            $request->session()->flash('alert-success', 'Order found!');
+            return view('admin.order',['orders'=>$orders]);
+        }
+    
     }
 
     public function search_request(Request $request)
     {
         $search = $request->search;
         $request_inventory = Request_Inventory::with('repairs')->where('name',$search)->orderBy('created_at','asc')->paginate(10);
-        return view('admin.request',['request_inventory'=>$request_inventory]);
+        if($request_inventory->isEmpty()){
+            $request->session()->flash('alert-danger', 'Request not found!');
+            return view('admin.request',['request_inventory'=>$request_inventory]);
+    
+        }
+        else{
+            $request->session()->flash('alert-success', 'Request found!');
+            return view('admin.request',['request_inventory'=>$request_inventory]);
+        }
+     
     }
 
 

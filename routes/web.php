@@ -154,7 +154,7 @@ Route::get('/service','CustomerController@service');
 Route::post('/service/products/','CustomerController@brand')->name('service.brand');
 Route::post('/service/products/ticket','CustomerController@ticket')->name('service.product');
 Route::post('/service/products/ticket/submit','CustomerController@send_ticket')->name('service.send_ticket');
-Route::get('/service/tickets','CustomerController@index_ticket');
+Route::get('/service/tickets','CustomerController@index_ticket')->name('index_ticket');
 Route::get('/service/tickets/{id}','CustomerController@view_ticket');
 Route::post('/service/tickets/{id}/message','CustomerController@send_message')->name('customer.message');
 });

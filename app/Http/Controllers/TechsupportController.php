@@ -7,10 +7,15 @@ use App\Ticket_Message;
 use App\Repair;
 use App\Ticket_Repair;
 use App\Repair_Message;
+use App\Customer;
 use Hash;
 use Auth;
 use Image;
 use Excel;
+use Notification;
+use App\Notifications\MessageSubmitted;
+use App\Notifications\NewRepair;
+use App\Notifications\RepairMessage;
 use Illuminate\Http\Request;
 
 class TechsupportController extends Controller
@@ -92,13 +97,16 @@ class TechsupportController extends Controller
     {
 
         $ticket = Ticket::where('id',$id)->get();
-
+        $customers = Customer::where('id',$ticket->get(0)->customer_id)->get();
         $ticket_messages = new Ticket_Message();
         $ticket_messages->ticket_id = $id;
         $ticket_messages->sender_techsupport_id = Auth::user()->id;
         $ticket_messages->message = $request->message;
         $ticket_messages->recipient_customer_id = $ticket->get(0)->customer_id;
         $ticket_messages->save();
+        foreach($customers as $customer){
+            Notification::route('mail',$customer->email)->notify(new MessageSubmitted($messages));
+            }
         $request->session()->flash('alert-success', 'Message Successfully Sent!');
         return redirect()->back();
     }
@@ -121,6 +129,11 @@ class TechsupportController extends Controller
         $ticket_repair->repair_id = $request->repair;
         $ticket_repair->message = $request->message;
         $ticket_repair->save();
+
+        $repairs = Repair::where('id',$request->repair)->get();
+        foreach($repairs as $repair){
+            Notification::route('mail',$repair->email)->notify(new NewRepair($messages));
+            }
         $request->session()->flash('alert-success', 'Repairman Successfully Assigned!');
         return redirect()->route('techsupport.open');
     }
@@ -143,6 +156,11 @@ class TechsupportController extends Controller
         $repair_messages->message = $request->message;
         $repair_messages->recipient_repair_id = $ticket->get(0)->repair_id;
         $repair_messages->save();
+        
+        $repairs = Repair::where('id',$ticket->get(0)->repair_id)->get();
+        foreach($repairs as $repair){
+            Notification::route('mail',$repair->email)->notify(new RepairMessage($messages));
+            }
         $request->session()->flash('alert-success', 'Message Successfully Sent!');
         return redirect()->back();
     }

@@ -6,11 +6,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use App\Notifications\MessageSubmitted;
-use App\Ticket_Message;
+use App\Notifications\NewRepair;
+use App\Ticket_Repair;
 use Auth;
 
-class MessageSubmitted extends Notification
+class NewRepair extends Notification
 {
     use Queueable;
     
@@ -47,11 +47,11 @@ class MessageSubmitted extends Notification
     {
         return (new MailMessage)
   
-        ->subject('New Message')
+        ->subject('New Repair')
         ->greeting('Hello!')
-                    ->line('You have a new message from one of your tickets.')         
-                    ->line('Please login to view the message.')             
-                    ->action('Login', route('index_ticket'));
+                    ->line('You have a new repair.')         
+                    ->line('Please login to view your assigned ticket.')             
+                    ->action('Login', route('repair.dashboard'));
     }
 
     /**

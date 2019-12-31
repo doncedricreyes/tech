@@ -12,6 +12,7 @@ use Hash;
 use Auth;
 use Image;
 use Excel;
+
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -117,14 +118,15 @@ class CustomerController extends Controller
     {
 
         $ticket = Ticket::where('id',$id)->get();
-
         $ticket_messages = new Ticket_Message();
         $ticket_messages->ticket_id = $id;
         $ticket_messages->sender_customer_id = Auth::user()->id;
         $ticket_messages->message = $request->message;
-        $ticket_messages->recipient_techsupport_id = $ticket->get(0)->customer_id;
+        $ticket_messages->recipient_techsupport_id = $ticket->get(0)->techsupport_id;
         $ticket_messages->save();
+    
         $request->session()->flash('alert-success', 'Message Successfully Sent!');
         return redirect()->back();
+        
     }
 }
