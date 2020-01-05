@@ -31,7 +31,10 @@ class CustomerController extends Controller
 
     public function home()
     {
-        return view('customer.home');
+        $id = Auth::user()->id;
+        $tickets = Ticket::with('products','customers')->where('customer_id',$id)->orderBy('created_at','DESC')->paginate(10);
+
+        return view('customer.index_ticket',['tickets'=>$tickets]);
     }
 
     public function service()
@@ -102,18 +105,35 @@ class CustomerController extends Controller
     function index_ticket()
     {
         $id = Auth::user()->id;
-        $tickets = Ticket::with('products','customers')->where('customer_id',$id)->orderBy('created_at','DESC')->get();
+        $tickets = Ticket::with('products','customers')->where('customer_id',$id)->orderBy('created_at','DESC')->paginate(10);
 
         return view('customer.index_ticket',['tickets'=>$tickets]);
     }
 
     public function view_ticket($id)
     {
-        $tickets = Ticket::with('products','customers')->where('id',$id)->get();
+        $tickets = Ticket::with('products','customers')->where('id',$id)->where('customer_id',auth::user()->id)->get();
         $ticket_messages = Ticket_Message::with('tickets','customers','techsupports')->where('ticket_id',$id)->get();
         return view('customer.view_ticket',['tickets'=>$tickets,'ticket_messages'=>$ticket_messages]);
     }
 
+    public function search_ticket(Request $request)
+    {
+        $search = $request->search;
+        $id = Auth::user()->id;
+        $tickets = Ticket::with('products','customers')->where('customer_id',$id)->where('id',$search)->orderBy('created_at','DESC')->paginate(10);
+        if($tickets->isEmpty()){
+            $request->session()->flash('alert-danger', 'Ticket not found!');
+            return view('customer.index_ticket',['tickets'=>$tickets]);
+    
+        }
+        else{
+            $request->session()->flash('alert-success', 'Ticket found!');
+            return view('customer.index_ticket',['tickets'=>$tickets]);
+        }
+
+      
+    }
     public function send_message(Request $request,$id)
     {
 
@@ -129,4 +149,49 @@ class CustomerController extends Controller
         return redirect()->back();
         
     }
+
+    public function account()
+    {
+        $customers = Customer::where('id',auth::user()->id)->get();
+        return view('customer.account',['customers'=>$customers]);
+    }
+
+    public function account_update(Request $request)
+    {
+        $this->validate($request, [
+            'old_password' => 'required',
+            'password' => 'required|confirmed',
+            'email' => 'required|',
+            'name' => 'required|',
+            'contact' => 'required|',
+            'address' => 'required|',
+        ], [
+  
+
+        ]);
+       
+        $id = Auth::user()->id;
+        $customers = Customer::where('id',$id)->get();
+     
+        if (Hash::check($request->old_password, $customers->get(0)->password)) {
+            $customer = Customer::find($id);
+            $customer->name = $request->name;
+            $customer->email = $request->email;
+            $customer->contact = $request->contact;
+            $customer->address = $request->address;
+            $customer->password = Hash::make($request['password']);
+            $customer->save();
+            $request->session()->flash('alert-success', 'Account successfully updated!');
+            return redirect()->back();
+        }
+        else{
+            $request->session()->flash('alert-danger', 'Account not updated!');
+            return redirect()->back();
+        }
+     
+     
+    }
+
+
+  
 }

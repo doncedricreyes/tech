@@ -21,9 +21,7 @@
         <div class="overlay"></div>
     </div>
 
-    <p>Feel free to discuss it with us! 
-        For inquiries about employment, subcontracting for us, or information about our current project,
-         fill up the form below, so we can connect you to the best person to help you.</p>
+
 
    
         <div class="flash-message">

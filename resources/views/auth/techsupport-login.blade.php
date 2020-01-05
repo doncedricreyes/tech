@@ -21,7 +21,7 @@ i {
 }
 
 .login-box {
-    width: 400px;
+    width: 500px;
     background: #e0e0df;
     box-shadow: 1px 1px 5px -3px #000000bf;
 }

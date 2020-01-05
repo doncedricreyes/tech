@@ -33,7 +33,7 @@ class TechsupportLoginController extends Controller
             return redirect('/techsupport/tickets/pending');
         }
            
-        return redirect()->back()->withInput($request->only('email','remember'));
+        return redirect()->back()->withInput($request->only('email','remember'))->withErrors('Invalid email/password!');
     }
     
     public function logout()

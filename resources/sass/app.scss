@@ -6,6 +6,9 @@
 @import url("https://unpkg.com/aos@2.3.1/dist/aos.css");
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/font-awesome/scss/font-awesome.scss";
+
 
 body {
     margin: 0;

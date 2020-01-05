@@ -172,7 +172,16 @@ class TechsupportController extends Controller
         
         $id = auth::user()->id;
         $tickets = Ticket::where('id',$search)->where('techsupport_id',$id)->where('status','pending')->orderBy('created_at','asc')->paginate(10);
-        return view('techsupport.pending',['tickets'=>$tickets]);
+        if($tickets->isEmpty()){
+            $request->session()->flash('alert-danger', 'Ticket not found!');
+            return view('techsupport.pending',['tickets'=>$tickets]);
+    
+        }
+        else{
+            $request->session()->flash('alert-success', 'Ticket found!');
+            return view('techsupport.pending',['tickets'=>$tickets]);
+        }
+      
     }
 
     public function search_open(Request $request)
@@ -182,7 +191,17 @@ class TechsupportController extends Controller
         $id = auth::user()->id;
         $tickets = Ticket::where('id',$search)->where('techsupport_id',$id)->where('status','open')->orderBy('created_at','asc')->paginate(10);
         $ticket_repairs = Ticket_Repair::with('tickets','repairs')->get();
-        return view('techsupport.open',['tickets'=>$tickets,'ticket_repairs'=>$ticket_repairs]);
+       
+        if($tickets->isEmpty()){
+            $request->session()->flash('alert-danger', 'Ticket not found!');
+            return view('techsupport.open',['tickets'=>$tickets,'ticket_repairs'=>$ticket_repairs]);
+    
+        }
+        else{
+            $request->session()->flash('alert-success', 'Ticket found!');
+            return view('techsupport.open',['tickets'=>$tickets,'ticket_repairs'=>$ticket_repairs]);
+        }
+       
     }
 
     public function search_close(Request $request)
@@ -191,7 +210,16 @@ class TechsupportController extends Controller
         
         $id = auth::user()->id;
         $tickets = Ticket::where('id',$search)->where('techsupport_id',$id)->where('status','closed')->orderBy('created_at','asc')->paginate(10);
-        return view('techsupport.close',['tickets'=>$tickets]);
+        if($tickets->isEmpty()){
+            $request->session()->flash('alert-danger', 'Ticket not found!');
+            return view('techsupport.close',['tickets'=>$tickets]);
+    
+        }
+        else{
+            $request->session()->flash('alert-success', 'Ticket found!');
+            return view('techsupport.close',['tickets'=>$tickets]);
+        }
+        
     }
 
     public function account()

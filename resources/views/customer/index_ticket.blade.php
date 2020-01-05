@@ -1,7 +1,12 @@
 @extends('layouts.website')
 
 @section('content')
-
+<style>
+#link{
+    position: relative;
+    float: left;
+}
+    </style>
 <div class="contact-head">
     <h1>Support and Services</h1>
     <img src="/storage/images/contact.jpeg">
@@ -45,7 +50,7 @@
           
             <div class="tbl-widg">
                 <div class="form-group">
-                    <form action = "" role="search" method="get"enctype="multipart/form-data">
+                    <form action = "{{route('search_ticket')}}" role="search" method="get"enctype="multipart/form-data">
                       <input type="text" class="form-control" name="search" id="search" placeholder="Search">
                     </form>
                   </div>
@@ -100,8 +105,12 @@
         </tbody>
             
     </table>
-    </div>
 
+    </div>
+    <div id="link"class="text-center">
+        {{ $tickets->links() }}
+       
+        </div>
 
 </div>
 

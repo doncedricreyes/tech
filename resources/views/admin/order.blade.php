@@ -29,7 +29,7 @@
             <div class="tbl-widg">
                 <div class="form-group">
                     <form action = "{{route('search_order')}}" role="search" method="get"enctype="multipart/form-data">
-                      <input type="text" class="form-control" name="search" id="search" placeholder="Search by product">
+                      <input type="text" class="form-control" name="search" id="search" placeholder="Search by repairman">
                     </form>
                   </div>
                 <div>
@@ -52,7 +52,7 @@
                           <th>Unit Price</th>
                           <th>Qty</th>
                           <th>Ordered by:</th>
-                 
+                          <th>Date ordered:</th>
                      
                   
                      </thead>
@@ -68,6 +68,7 @@
                <td><h6>{{$i->inventory->get(0)->price}}</h6></td>
                <td><h6>{{$i->qty}}</h6></td>
                <td><h6>{{$i->repairs->get(0)->name}}</h6></td>
+               <td><h6>{{$i->created_at}}</h6></td>
         </tr>
 @endforeach
 

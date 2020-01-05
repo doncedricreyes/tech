@@ -51,7 +51,7 @@ class MessageSubmitted extends Notification
         ->greeting('Hello!')
                     ->line('You have a new message from one of your tickets.')         
                     ->line('Please login to view the message.')             
-                    ->action('Login', route('index_ticket'));
+                    ->action('Login', route('customer.dashboard'));
     }
 
     /**

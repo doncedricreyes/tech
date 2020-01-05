@@ -24,7 +24,7 @@ class CustomerLoginController extends Controller
         //validate
         $this->validate($request, [
             'email' => 'required|email',
-            'password' => 'required|min:6'
+            'password' => 'required'
         ]);
         
         //attempt to login
@@ -33,7 +33,7 @@ class CustomerLoginController extends Controller
             return redirect()->intended(route('customer.dashboard'));
         }
            
-        return redirect()->back()->withInput($request->only('email','remember'));
+        return redirect()->back()->withInput($request->only('email','remember'))->withErrors('Invalid email/password!');
     }
     
     public function logout()

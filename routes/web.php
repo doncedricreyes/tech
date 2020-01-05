@@ -17,16 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/about', 'WebsiteController@about');
-Route::get('/careers', 'WebsiteController@careers');
-Route::get('/careers/{id}','WebsiteController@job');
-Route::post('/application','WebsiteController@application')->name('application');
-Route::get('/projects','WebsiteController@project');
-Route::get('/contacts','WebsiteController@contact');
-Route::post('/contacts','WebsiteController@add_contact')->name('add_contact');
+Auth::routes();
+Route::get('/products','WebsiteController@product');
+Route::get('/about','WebsiteController@about');
 
 
 
@@ -82,6 +76,10 @@ Route::get('/inventory/orders/search','AdminController@search_order')->name('sea
 Route::get('/inventory/requests','AdminController@request');
 Route::get('/inventory/requests/search','AdminController@search_request')->name('search_request');
 Route::put('/inventory/requests/{id}','AdminController@request_status')->name('request_status');
+
+Route::get('/tickets','AdminController@ticket');
+Route::get('/tickets/{id}','AdminController@ticket_message');
+Route::get('/search/tickets','AdminController@search_ticket')->name('admin.search_ticket');
 });
 
 Route::prefix('techsupport')->group(function()
@@ -149,12 +147,15 @@ Route::post('/password/email', 'Auth\CustomerForgotPasswordController@sendResetL
 Route::get('/password/reset', 'Auth\CustomerForgotPasswordController@showLinkRequestForm')->name('customer.password.request');
 Route::post('/password/reset', 'Auth\CustomerResetPasswordController@reset');
 Route::get('/password/reset/{token}', 'Auth\CustomerResetPasswordController@showResetForm')->name('customer.password.reset');
-Route::get('/','CustomerController@home')->name('customer.dashboard');
+Route::get('/account','CustomerController@account');
+Route::put('account','CustomerController@account_update')->name('update.customer');
+Route::get('/','CustomerController@home');
 Route::get('/service','CustomerController@service');
-Route::post('/service/products/','CustomerController@brand')->name('service.brand');
-Route::post('/service/products/ticket','CustomerController@ticket')->name('service.product');
+Route::get('/service/products/','CustomerController@brand')->name('service.brand');
+Route::get('/service/products/ticket','CustomerController@ticket')->name('service.product');
+Route::get('/service/products/ticket/search','CustomerController@search_ticket')->name('search_ticket');
 Route::post('/service/products/ticket/submit','CustomerController@send_ticket')->name('service.send_ticket');
-Route::get('/service/tickets','CustomerController@index_ticket')->name('index_ticket');
+Route::get('/service/tickets','CustomerController@index_ticket')->name('customer.dashboard');
 Route::get('/service/tickets/{id}','CustomerController@view_ticket');
 Route::post('/service/tickets/{id}/message','CustomerController@send_message')->name('customer.message');
 });
