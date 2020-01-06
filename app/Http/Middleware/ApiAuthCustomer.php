@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Http\Library\BasicAuthSerializer;
+use Auth;
 
 class ApiAuthCustomer
 {
@@ -13,10 +15,16 @@ class ApiAuthCustomer
      * @param  \Closure  $next
      * @return mixed
      * @Todo - implement http basic auth
+     * Do auth. save what you need to the session
      */
     public function handle($request, Closure $next)
     {
         //return response('This shit is working', 403);
+        $oSerializer = new BasicAuthSerializer('Y3VzdG9tZXJAZXhhbXBsZS5jb206cGFzc3dvcmQ=');
+        echo "Username: " . $oSerializer->getUsername();
+        echo "Password: " . $oSerializer->getPassword();
+        return response()->json($oSerializer->getCredentials());
+        
         return $next($request);
     }
 }
