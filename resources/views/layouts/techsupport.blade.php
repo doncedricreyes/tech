@@ -9,7 +9,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>PIOLINX ENGINEERING SERVICES</title>
+  <title>VASUS Tech Support</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -41,7 +41,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><img src="/storage/images/logo2.jpg" class="img-circle" id="logo" height="45" width="45"></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><img src="/storage/images/logo.png" id="logo" width="200"></span>
+      <span class="logo-lg"><img src="/storage/images/vasus2.jpg" id="logo" width="200"></span>
     </a>
 
     <!-- Header Navbar -->
@@ -84,14 +84,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <ul class="sidebar-menu" data-widget="tree">
           <!-- Optionally, you can add icons to the links -->
 
-          <li class="{{Request::is('techsupport/tickets/pending') ? 'active' : ''}}"><a href="/techsupport/tickets/pending"><i class="fa fa-briefcase"></i> <span>Pending tickets</span></a></li>
-          <li class="{{Request::is('techsupport/tickets/open') ? 'active' : ''}}"><a href="/techsupport/tickets/open"><i class="fa fa-clipboard"></i> <span>Active tickets</span></a></li>
-          <li class="{{Request::is('techsupport/tickets/closed') ? 'active' : ''}}"><a href="/techsupport/tickets/closed"><i class="fa fa-envelope-open"></i> <span>Closed tickets</span></a></li>
+          <li class="{{Request::is('techsupport/tickets/pending') ? 'active' : ''}}"><a href="/techsupport/tickets/pending"><i class="fas fa-envelope-open"></i> <span>Pending tickets</span></a></li>
+          <li class="{{Request::is('techsupport/tickets/open') ? 'active' : ''}}"><a href="/techsupport/tickets/open"><i class="fas fa-envelope-open-text"></i> <span>Active tickets</span></a></li>
+          <li class="{{Request::is('techsupport/tickets/closed') ? 'active' : ''}}"><a href="/techsupport/tickets/closed"><i class="fa fa-envelope-square"></i> <span>Closed tickets</span></a></li>
 
 
 
 
-          <li><a href="/techsupport/logout"><i class="fa fa-sign-out"></i>  <span>Logout</span></a></li>
+          <li class="{{Request::is('techsupport/account') ? 'active' : ''}}"><a href="/techsupport/account"><i class="fas fa-user"></i>  <span>Account</span></a></li>
+          <li><a href="/techsupport/logout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
         </ul>
    
 

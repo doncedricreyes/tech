@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\Api;
+use App\Brand;
 
 use App\Http\Controllers\Controller;
 
@@ -28,7 +29,7 @@ class ProductController extends BaseApiController {
      * @Todo return all brands
      */
     public function getBrands() {
-        $aBrands = array('bobo', 'tanga');
+        $aBrands = Brand::get();
         return response(json_encode($aBrands), 200, $this->aHeaders);
     }
 }

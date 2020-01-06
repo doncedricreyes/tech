@@ -21,7 +21,7 @@ i {
 }
 
 .login-box {
-    width: 400px;
+    width: 500px;
     background: #e0e0df;
     box-shadow: 1px 1px 5px -3px #000000bf;
 }
@@ -31,6 +31,7 @@ i {
     padding: 20px;
 }
 </style>
+
 
 @if ($errors->any())
 <div class="alert alert-danger">
@@ -55,6 +56,8 @@ i {
     @endif
     <i class="fas fa-envelope form-control-feedback"></i>
   </div>
+
+  
   <div class="form-group has-feedback">
     <input id="password" placeholder="Password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
 
@@ -86,7 +89,9 @@ i {
 
 <!-- /.social-auth-links -->
 <div class="text-center">
+  <a style="color:#7fbf47;"  href="{{ route('customer.register') }}">Don't have an account yet?</a><br>
 <a style="color:#7fbf47;"  href="{{ route('customer.password.request') }}">I forgot my password</a><br>
+
 </div>
 
 

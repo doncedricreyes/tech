@@ -41,7 +41,7 @@ class RepairController extends Controller
 
     public function repair_message($id)
     {
-        $ticket_repairs = Ticket_Repair::with('tickets','repairs')->where('ticket_id',$id)->get();
+        $ticket_repairs = Ticket_Repair::with('tickets','repairs')->where('ticket_id',$id)->where('repair_id',auth::user()->id)->get();
         $repair_messages = Repair_Message::with('repairs','tickets','techsupports')->where('ticket_id',$id)->get();
         return view('repair.message',['repair_messages'=>$repair_messages,'ticket_repairs'=>$ticket_repairs]);
     }
@@ -184,7 +184,19 @@ class RepairController extends Controller
     {
         $search = $request->search;
         $ticket_repairs = Ticket_Repair::with('tickets','repairs')->where('ticket_id',$search)->where('repair_id',Auth::user()->id)->orderBy('created_at','asc')->paginate(10);
-        return view('repair.repair',['ticket_repairs'=>$ticket_repairs]);
+        if($ticket_repairs->isEmpty()){
+            $request->session()->flash('alert-danger', 'Ticket not found!');
+            return view('repair.repair',['ticket_repairs'=>$ticket_repairs]);
+    
+        }
+        else{
+            $request->session()->flash('alert-success', 'Ticket found!');
+            return view('repair.repair',['ticket_repairs'=>$ticket_repairs]);
+        }
+     
+       
+       
+
     }
 
     public function search_order(Request $request)
@@ -192,13 +204,32 @@ class RepairController extends Controller
         $search = $request->search;
         $inventory = Inventory::where('name',$search)->get();
         $orders = Order::with('inventory','repairs')->where('inventory_id',$inventory->get(0)->id)->where('repair_id',auth::user()->id)->orderBy('created_at','asc')->paginate(10);
-        return view('repair.order',['orders'=>$orders]);
+        if($orders->isEmpty()){
+            $request->session()->flash('alert-danger', 'Product not found!');
+            return view('repair.order',['orders'=>$orders]);
+    
+        }
+        else{
+            $request->session()->flash('alert-success', 'Product found!');
+            return view('repair.order',['orders'=>$orders]);
+        }
+     
     }
 
     public function search_request(Request $request)
     {
         $search = $request->search;
         $request_inventory = Request_Inventory::with('repairs')->where('name',$search)->where('repair_id',auth::user()->id)->orderBy('created_at','asc')->paginate(10);
-        return view('repair.request',['request_inventory'=>$request_inventory]);
+        if($request_inventory->isEmpty()){
+            $request->session()->flash('alert-danger', 'Product not found!');
+            return view('repair.request',['request_inventory'=>$request_inventory]);
+    
+        }
+        else{
+            $request->session()->flash('alert-success', 'Product found!');
+            return view('repair.request',['request_inventory'=>$request_inventory]);
+        }
+        
+      
     }
 }

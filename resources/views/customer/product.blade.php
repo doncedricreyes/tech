@@ -14,9 +14,7 @@
         <div class="overlay"></div>
     </div>
 
-    <p>Feel free to discuss it with us! 
-        For inquiries about employment, subcontracting for us, or information about our current project,
-         fill up the form below, so we can connect you to the best person to help you.</p>
+ 
 
    
         <div class="flash-message">
@@ -35,14 +33,14 @@
         @endif
 
       
-        <form action = "{{route('service.product')}}" method="post"  enctype="multipart/form-data">
+        <form action = "{{route('service.product')}}" method="get"  enctype="multipart/form-data">
             {{csrf_field() }}
     <div class="contact-form">
  
 
         <div class="form-group">
             <select name="product" id="product" class="form-control input-lg dynamic" data-dependent="state">
-             <option value="">Select Product</option>
+             <option value="" disabled>Select Product</option>
              @foreach($products as $product)
              <option value="{{ $product->id}}">{{ $product->name }}</option>
              @endforeach

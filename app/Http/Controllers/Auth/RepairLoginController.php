@@ -33,7 +33,7 @@ class RepairLoginController extends Controller
             return redirect('/repair/repairs');
         }
            
-        return redirect()->back()->withInput($request->only('email','remember'));
+        return redirect()->back()->withInput($request->only('email','remember'))->withErrors('Invalid email/password!');
     }
     
     public function logout()

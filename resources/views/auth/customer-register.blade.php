@@ -3,7 +3,49 @@
 
 @section('content')
 
-
+<style >
+    .form-group{
+        position: relative;
+    }
+    
+    i {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 10px;
+    }
+    .form-check-input {
+        position: relative; 
+        margin-top: 0; 
+        margin-left: 0; 
+    }
+    
+    .login-box {
+        width: 500px;
+        background: #e0e0df;
+        box-shadow: 1px 1px 5px -3px #000000bf;
+    }
+    
+    .login-logo{
+        margin-bottom: 0; 
+        padding: 20px;
+    }
+    #register{
+        position: relative;
+        float: right;
+    }
+    </style>
+    
+    
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
 
 <p class="login-box-msg">Create an account</p>
@@ -17,7 +59,7 @@
                     <strong>{{ $errors->first('name') }}</strong>
                 </span>
             @endif
-            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            <i class="fas fa-user form-control-feedback"></i>
           </div>
   <div class="form-group has-feedback">
     <input id="email" type="email" placeholder="Email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
@@ -27,7 +69,7 @@
             <strong>{{ $errors->first('email') }}</strong>
         </span>
     @endif
-    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+    <i class="fas fa-envelope form-control-feedback"></i>
   </div>
   <div class="form-group has-feedback">
         <input id="contact" type="number" placeholder="Contact" class="form-control{{ $errors->has('contact') ? ' is-invalid' : '' }}" name="contact" value="{{ old('contact') }}" required autofocus>
@@ -37,7 +79,7 @@
                 <strong>{{ $errors->first('contact') }}</strong>
             </span>
         @endif
-        <span class="glyphicon glyphicon-phone form-control-feedback"></span>
+        <i class="fas fa-phone form-control-feedback"></i>
       </div>
       <div class="form-group has-feedback">
             <input id="address" type="text" placeholder="Address" class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}" name="address" value="{{ old('address') }}" required autofocus>
@@ -47,7 +89,7 @@
                     <strong>{{ $errors->first('address') }}</strong>
                 </span>
             @endif
-            <span class="glyphicon glyphicon-map-marker form-control-feedback"></span>
+            <i class="fas fa-address-card form-control-feedback"></i>
           </div>
   <div class="form-group has-feedback">
     <input id="password" type="password" placeholder="Password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
@@ -57,24 +99,26 @@
             <strong>{{ $errors->first('password') }}</strong>
         </span>
     @endif
-    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+    <i class="fas fa-lock form-control-feedback"></i>
   </div>
   <div class="form-group has-feedback">
         <input id="password-confirm" type="password" placeholder="Confirm Password" class="form-control" name="password_confirmation" required>
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        <i class="fas fa-lock form-control-feedback"></i>
       </div>
 
-         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4" id="register">
+                            <div  id="register">
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Register') }}
                                 </button>
                             </div>
-                        </div>
+<br><br>
 </form>
 
 
 <!-- /.social-auth-links -->
 
-<a href="/login" class="text-center">Already a member?</a>
+<div class="text-center">
+    <a style="color:#7fbf47;"  href="{{ route('customer.login') }}">Already a member?</a><br>
+  
+  </div>
 @endsection

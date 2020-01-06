@@ -2,10 +2,17 @@
 
 <html>
 <style>
-        #logo{
+         #logo1{
             position: relative;
             float: left;
         }
+
+        #logo{
+            position: relative;
+            
+        }
+
+      
         #nav{
             position: relative;
             top:80px;
@@ -24,7 +31,7 @@
       <!-- CSRF Token -->
       <meta name="csrf-token" content="{{ csrf_token() }}">
           
-      <title>{{ config('PIOLINX ENGINEERING SERVICES', 'PIOLINX ENGINEERING SERVICES') }}</title>
+      <title>{{ config('VASUS Tech Support', 'VASUS Tech Support') }}</title>
       <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
   
@@ -32,7 +39,7 @@
   </head>
   <body>
      <nav class="navbar navbar-expand-md navbar-dark fixed-top">
-      <a class="navbar-brand" href="/"> <img src="/storage/images/logo.png" id="logo" width="200"></a>
+      <a class="navbar-brand" href="/"> <img src="/storage/images/logo1.png" id="logo1" width="50" height="42"> &nbsp;&nbsp;&nbsp;<img src="/storage/images/logo.png" id="logo" width="185" height="32"></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -42,26 +49,36 @@
               <a class="nav-link" href="/">Home</a>
           </li>
           <li class="nav-item {{Request::is('about') ? 'active' : ''}}">
-            <a class="nav-link" href="/about">hello master</a>
+            <a class="nav-link" href="/about">About</a>
           </li>
-          <li class="nav-item {{Request::is('projects') ? 'active' : ''}}">
-            <a class="nav-link" href="/projects">Projects & Services</a>
-          </li>
-          <li class="nav-item {{Request::is('careers') ? 'active' : ''}}">
-            <a class="nav-link" href="/careers">Careers</a>
-          </li>
-          <li class="nav-item {{Request::is('contacts') ? 'active' : ''}}">
-            <a class="nav-link" href="/contacts">Contact</a>
+          <li class="nav-item {{Request::is('products') ? 'active' : ''}}">
+            <a class="nav-link" href="/products">Products</a>
           </li>
           <li class="nav-item {{Request::is('/customer/service') ? 'active' : ''}}">
             <a class="nav-link" href="/customer/service">Service</a>
           </li>
-               <li class="nav-item {{Request::is('/customer/service') ? 'active' : ''}}">
+          <li class="nav-item {{Request::is('/customer/service/tickets') ? 'active' : ''}}">
             <a class="nav-link" href="/customer/service/tickets">My tickets</a>
           </li>
-          <li class="nav-item {{Request::is('/customer/login') ? 'active' : ''}}">
+
+          @guest
+          <li class="nav-item {{Request::is('customer') ? 'active' : ''}}">
             <a class="nav-link" href="/customer/login">Login</a>
+          </li>   
+          @endguest
+          @if(auth::user())
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">{{Auth::user()->name}}</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/customer/account">Account</a>
+              <a class="dropdown-item" href="/customer/logout">Sign out</a>
+            
+            </div>
           </li>
+
+          @endif
+
+          
         </ul>
       </div>
     </nav>
@@ -72,19 +89,19 @@
               <h5>Site Links</h5>
               <p><a href="/">Home</a></p>
               <p><a href="/about">About</a></p>
-              <p><a href="/projects">Projects</a></p>
-              <p><a href="/careers">Careers</a></p>
+              <p><a href="/products">Products</a></p>
+              <p><a href="/careers">Login</a></p>
           </div>
           <div><h5>Get in touch</h5>
               <p><a href="/contact">Contact Us</a></p>
               <p>Phone: (+63) 927 655 8584</p>
-              <p>Email: piolinxengineering@gmail.com</p>
+              <p>Email: vtsphilippines@gmail.com</p>
               <p>On Social Media: </p>
               <p><a href="#"><i class="fab fa-facebook-square"></i></a><a href="#"><i class="fab fa-facebook-messenger"></i></a><a href="#"><i class="fab fa-twitter-square"></i></a><a href="#"><i class="fab fa-google-plus-square"></i></a></p>
           </div>
-          <div><h5>Location</h5><p>Poblacion, Muntinlupa City, Philippines</p></div>
+          <div><h5>Location</h5><p>Cubao, Quezon City, Philippines</p></div>
         </div>
-        <div class="foot-note">© Piolinx — Engineering Services, 2019 All Rights Reserved. </div>
+        <div class="foot-note">© VASUS — Tech Support, 2019 All Rights Reserved. </div>
     </section>
       <!--nav class="navbar navbar-expand-lg navbar-light ">
               <img src="/storage/images/logo.jpg" class="navbar-brande" id="logo" width="600" height="200">

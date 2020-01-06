@@ -12,6 +12,8 @@ use App\Category;
 use App\Inventory;
 use App\Order;
 use App\Request_Inventory;
+use App\Ticket;
+use App\Ticket_Message;
 use Auth;
 use Image;
 use Excel;
@@ -86,9 +88,9 @@ class AdminController extends Controller
 
     public function repair()
     {
-       
+       $branches = Branch::get();
         $repairs = Repair::with('branches')->where('status','active')->orderBy('name')->paginate(10);
-        return view('admin.repair',['repairs'=>$repairs]);
+        return view('admin.repair',['repairs'=>$repairs,'branches'=>$branches]);
     }
     
     public function create_repair(Request $request)
@@ -538,8 +540,8 @@ class AdminController extends Controller
     public function search_order(Request $request)
     {
         $search = $request->search;
-        $inventory = Inventory::where('name',$search)->get();
-        $orders = Order::with('inventory','repairs')->where('inventory_id',$inventory->get(0)->id)->orderBy('created_at','asc')->paginate(10);
+        $repair = Repair::where('name',$search)->get();
+        $orders = Order::with('inventory','repairs')->where('repair_id',$repair->get(0)->id)->orderBy('created_at','asc')->paginate(10);
         if($orders->isEmpty()){
             $request->session()->flash('alert-danger', 'Order not found!');
             return view('admin.order',['orders'=>$orders]);
@@ -555,7 +557,8 @@ class AdminController extends Controller
     public function search_request(Request $request)
     {
         $search = $request->search;
-        $request_inventory = Request_Inventory::with('repairs')->where('name',$search)->orderBy('created_at','asc')->paginate(10);
+        $repair = Repair::where('name',$search)->get();
+        $request_inventory = Request_Inventory::with('repairs')->where('repair_id',$repair->get(0)->id)->orderBy('created_at','asc')->paginate(10);
         if($request_inventory->isEmpty()){
             $request->session()->flash('alert-danger', 'Request not found!');
             return view('admin.request',['request_inventory'=>$request_inventory]);
@@ -613,6 +616,38 @@ class AdminController extends Controller
         $requests->status = $request->status;
         $requests->save();
        return redirect()->back();
+    }
+
+    public function ticket()
+    {
+        $tickets = Ticket::paginate(10);
+        return view('admin.ticket',['tickets'=>$tickets]);
+    }
+
+    public function ticket_message($id)
+    {
+       
+        $tickets = Ticket::where('id',$id)->get();
+        $ticket_messages = Ticket_Message::with('tickets','customers','techsupports')->where('ticket_id',$id)->get();
+        return view('admin.ticket_message',['tickets'=>$tickets,'ticket_messages'=>$ticket_messages]);
+    }
+
+    public function search_ticket(Request $request)
+    {
+        $search = $request->search;
+        
+    
+        $tickets = Ticket::where('id',$search)->paginate(10);
+        if($tickets->isEmpty()){
+            $request->session()->flash('alert-danger', 'Ticket not found!');
+            return view('admin.ticket',['tickets'=>$tickets]);
+    
+        }
+        else{
+            $request->session()->flash('alert-success', 'Ticket found!');
+            return view('admin.ticket',['tickets'=>$tickets]);
+        }
+      
     }
 
 }

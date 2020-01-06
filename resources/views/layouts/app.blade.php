@@ -29,7 +29,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <img src="/storage/images/logo.png" id="logo" width="200"></a>
+    <img src="/storage/images/vasus2.jpg" id="logo" width="200"></a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
