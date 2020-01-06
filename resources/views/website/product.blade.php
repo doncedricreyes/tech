@@ -9,19 +9,19 @@
     </ol>
     <div class="carousel-inner">
         <div class="carousel-item ">
-        <img src="/storage/images/laptop.jpg" style="border-radius:10px" height="1000px"class="d-block w-100" alt="...">
+        <img src="/storage/images/laptop.jpg" style="border-radius:10px" height="600px"class="d-block w-100" alt="...">
         <div class="carousel-caption d-none d-md-block">
             <h3 class="h1-class">Laptops</h5>
         </div>
         </div>
         <div class="carousel-item">
-        <img src="/storage/images/iphone.jpg" style="border-radius:10px"height="1000px"class="d-block w-100" alt="...">
+        <img src="/storage/images/iphone.jpg" style="border-radius:10px"height="600px"class="d-block w-100" alt="...">
         <div class="carousel-caption d-none d-md-block">
             <h3 class="h1-class">Phones</h5>
         </div>
         </div>
         <div class="carousel-item active">
-        <img src="/storage/images/pc.jpg" style="border-radius:10px"height="1000px"class="d-block w-100" alt="...">
+        <img src="/storage/images/pc.jpg" style="border-radius:10px"height="600px"class="d-block w-100" alt="...">
         <div class="carousel-caption d-none d-md-block">
             <h3 class="h1-class">Computers</h5>
         </div>
@@ -62,7 +62,11 @@
             </div>
         </div>
         @endforeach
-       
+    </div>
+        <div class="text-center">
+            {{ $products->links() }}
+           
+            </div>
 
 
 @endsection

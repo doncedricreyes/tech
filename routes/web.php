@@ -109,6 +109,7 @@ Route::get('/tickets/repairs/{id}','TechsupportController@repair');
 Route::post('/tickets/repairs/{id}','TechsupportController@send_repair')->name('techsupport.repair');
 Route::get('/tickets/repairs/{id}/messages','TechsupportController@repair_message');
 Route::post('/tickets/repairs/{id}/message','TechsupportController@send_repair_message')->name('techsupport.repair_message');
+
 });
 
 Route::prefix('repair')->group(function()

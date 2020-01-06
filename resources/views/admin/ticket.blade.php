@@ -60,16 +60,16 @@
         
             @foreach($tickets as $i)
             <tr>
-                <td><h6>{{ ($tickets ->currentpage()-1) * $tickets ->perpage() + $loop->index + 1 }}</h6></td>
-               <td><a href="/admin/tickets/{{$i->id}}"> <h6>{{$i->id}}</h6></a></td>
-               <td><h6>{{$i->customers->get(0)->name}}</h6></td>
-               <td><h6>{{$i->customers->get(0)->contact}}</h6></td>
-               <td><h6>{{$i->customers->get(0)->email}}</h6></td>
-               <td><h6>{{$i->products->get(0)->brands->name}}</h6></td>
-               <td><h6>{{$i->products->get(0)->name}}</h6></td>
-               <td><h6>{{$i->branches->get(0)->name}}</h6></td>
-               <td><h6>{{$i->techsupports->get(0)->name}}</h6></td>
-               <td><h6>{{$i->repairs->get(0)->name}}</h6></td>
+                <td><h5>{{ ($tickets ->currentpage()-1) * $tickets ->perpage() + $loop->index + 1 }}</h5></td>
+               <td><a href="/admin/tickets/{{$i->id}}"> <h5>{{$i->id}}</h5></a></td>
+               <td><h5>{{$i->customers->get(0)->name}}</h5></td>
+               <td><h5>{{$i->customers->get(0)->contact}}</h5></td>
+               <td><h5>{{$i->customers->get(0)->email}}</h5></td>
+               <td><h5>{{$i->products->get(0)->brands->name}}</h5></td>
+               <td><h5>{{$i->products->get(0)->name}}</h5></td>
+               <td><h5>{{$i->branches->get(0)->name}}</h5></td>
+               <td><h5>{{$i->techsupports->get(0)->name}}</h5></td>
+               <td><h5>{{$i->repairs->get(0)->name}}</h5></td>
                @if($i->status == 'open')
                <td><span class="btn btn-success">{{$i->status}}</span></td>
                @endif

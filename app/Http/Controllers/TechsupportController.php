@@ -118,6 +118,7 @@ class TechsupportController extends Controller
         return view('techsupport.repair',['tickets'=>$tickets,'repairs'=>$repairs]);
     }
 
+
     public function send_repair($id,Request $request)
     {
         $tickets = Ticket::find($id);

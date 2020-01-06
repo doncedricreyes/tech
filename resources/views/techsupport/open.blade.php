@@ -55,7 +55,7 @@
                         <th>dop</th>
                         <th>Receipt</th>
                         <th>Status</th>
-                        <th>Repairs</th>
+                        <th>Repairman assigned</th>
                      </thead>
         <tbody>
         

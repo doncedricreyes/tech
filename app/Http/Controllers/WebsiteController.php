@@ -19,7 +19,7 @@ class WebsiteController extends Controller
 
     public function product()
     {
-        $products = Product::get();
+        $products = Product::where('status','available')->paginate(12);
         return view('website.product',['products'=>$products]);
     }
 

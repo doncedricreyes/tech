@@ -31,7 +31,7 @@
       <!-- CSRF Token -->
       <meta name="csrf-token" content="{{ csrf_token() }}">
           
-      <title>{{ config('PIOLINX ENGINEERING SERVICES', 'PIOLINX ENGINEERING SERVICES') }}</title>
+      <title>{{ config('VASUS Tech Support', 'VASUS Tech Support') }}</title>
       <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
   

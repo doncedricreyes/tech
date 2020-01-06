@@ -64,8 +64,8 @@
                     
                         @foreach($branches as $i)
                         <tr>
-                           <td><h4>{{$i->name}}</h4></td>
-                           <td><h4>{{$i->address}}</h4></td>
+                           <td><h5>{{$i->name}}</h5></td>
+                           <td><h5>{{$i->address}}</h5></td>
                            <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-id="{!! $i->id !!}" data-target="#edit-{{$i->id}}" ><i class="far fa-edit"></i></button></p></td>
                           <form action = "{{route('delete.branch', $i->id)}}" method="post" enctype="multipart/form-data">
         

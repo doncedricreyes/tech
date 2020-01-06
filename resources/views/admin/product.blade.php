@@ -68,11 +68,11 @@
                     
                             @foreach($products as $i)
                             <tr>
-                               <td><h4>{{$i->name}}</h4></td>
-                               <td><h4>{{$i->brands->name}}</h4></td>
+                               <td><h5>{{$i->name}}</h5></td>
+                               <td><h5>{{$i->brands->name}}</h5></td>
                                <td>   <img src="/storage/images/{{$i->pic}}"></td>                               
-                               <td><h4>{{$i->price}}</h4></td>
-                               <td><h4>{{$i->description}}</h4></td>
+                               <td><h5>{{$i->price}}</h5></td>
+                               <td><h5>{{$i->description}}</h5></td>
                                <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-id="{!! $i->id !!}" data-target="#edit-{{$i->id}}" ><i class="far fa-edit"></i></button></p></td>
                               <form action = "{{route('delete.product', $i->id)}}" method="post" enctype="multipart/form-data">
             

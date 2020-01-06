@@ -27,19 +27,21 @@ class CustomerController extends BaseApiController {
         $id = Auth::user()->id;
         $aTickets = Ticket::with('products','customers')->where('customer_id',$id)->orderBy('created_at','DESC')->get();
         
-        return response(json_encode($aTickets), 200, $this->aHeaders);
+        return response()->json($aTickets);
+       
     }
 
     public function getBrands(){
         $aBrands = Brand::get();
-        return response(json_encode($aBrands), 200, $this->aHeaders);
+        return response()->json($aBrands);
+
     }
 
     public function getProducts(Request $request){
         $brand = $request->brand;
 
         $aProducts = Product::with('brands')->where('brand_id','=',$brand)->get();
-        return response(json_encode($aProducts), 200, $this->aHeaders);
+        return response()->json($aProducts);
     }
 
     function ticket(Request $request)
@@ -48,14 +50,14 @@ class CustomerController extends BaseApiController {
         $product = $request->product;
         $aBranches = Branch::where('status','active')->get();
         $aProducts = Product::with('brands')->where('id','=',$product)->get();
-        return response(json_encode($aProducts,$aBranches), 200, $this->aHeaders);
+        return response()->json($aBranches,$aProducts);
     }
     public function getTickets() {
       
         $id = Auth::user()->id;
         $aTickets = Ticket::with('products','customers')->where('customer_id',$id)->orderBy('created_at','DESC')->get();
         
-        return response(json_encode($aTickets), 200, $this->aHeaders);
+        return response()->json($aTickets);
     }
 
     
@@ -64,7 +66,7 @@ class CustomerController extends BaseApiController {
         $aTickets = Ticket::with('products','customers')->where('id',$id)->where('customer_id',auth::user()->id)->get();
         $aTicket_messages = Ticket_Message::with('tickets','customers','techsupports')->where('ticket_id',$id)->get();
 
-        return response(json_encode($aTickets,$aTicket_messages), 200, $this->aHeaders);
+        return response()->json($aTickets,$aTicket_messages);
         
     }
 
@@ -75,7 +77,7 @@ class CustomerController extends BaseApiController {
         $id = Auth::user()->id;
         $aTickets = Ticket::with('products','customers')->where('customer_id',$id)->where('id',$search)->orderBy('created_at','DESC')->paginate(10);
 
-        return response(json_encode($aTickets), 200, $this->aHeaders);
+        return response()->json($aTickets);
     }
     public function send_message(Request $request,$id)
     {
