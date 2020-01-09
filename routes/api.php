@@ -18,6 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::prefix('/customer')->middleware('apiCustomer')->group(function() {
+    Route::post('/login','Api\CustomerController@login');
     Route::get('/', 'Api\CustomerController@index');
     Route::get('/service','Api\CustomerController@getBrands');
     Route::get('/service/products','Api\CustomerController@getProducts');

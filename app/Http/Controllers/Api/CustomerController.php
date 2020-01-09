@@ -10,6 +10,7 @@ use App\Ticket_Message;
 use Auth;
 use \App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 /**
  * Customer Controller for Api
  * 
@@ -19,16 +20,27 @@ use Illuminate\Http\Request;
 class CustomerController extends BaseApiController {
 
     
-
     /**
      * Default response
      */
+    public function login(Request $request)
+    {
+       
+        if (Auth::guard('customer')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            
+            return response()->json(bobo);
+        }
+       
+    }
     public function index() {
-        $id = Auth::user()->id;
+   
+        
+        
+        $id = Auth::guard('customer')->user()->id;
         $aTickets = Ticket::with('products','customers')->where('customer_id',$id)->orderBy('created_at','DESC')->get();
         
         return response()->json($aTickets);
-       
+    
     }
 
     public function getBrands(){
@@ -54,7 +66,7 @@ class CustomerController extends BaseApiController {
     }
     public function getTickets() {
       
-        $id = Auth::user()->id;
+        $id = Auth::guard('customer')->user()->id;
         $aTickets = Ticket::with('products','customers')->where('customer_id',$id)->orderBy('created_at','DESC')->get();
         
         return response()->json($aTickets);
@@ -63,7 +75,7 @@ class CustomerController extends BaseApiController {
     
     public function viewTickets($id) {
       
-        $aTickets = Ticket::with('products','customers')->where('id',$id)->where('customer_id',auth::user()->id)->get();
+        $aTickets = Ticket::with('products','customers')->where('id',$id)->where('customer_id',Auth::guard('customer')->user()->id)->get();
         $aTicket_messages = Ticket_Message::with('tickets','customers','techsupports')->where('ticket_id',$id)->get();
 
         return response()->json($aTickets,$aTicket_messages);
@@ -74,7 +86,7 @@ class CustomerController extends BaseApiController {
     public function search_ticket(Request $request)
     {
         $search = $request->search;
-        $id = Auth::user()->id;
+        $id = Auth::guard('customer')->user()->id;
         $aTickets = Ticket::with('products','customers')->where('customer_id',$id)->where('id',$search)->orderBy('created_at','DESC')->paginate(10);
 
         return response()->json($aTickets);
@@ -85,7 +97,7 @@ class CustomerController extends BaseApiController {
         $ticket = Ticket::where('id',$id)->get();
         $ticket_messages = new Ticket_Message();
         $ticket_messages->ticket_id = $id;
-        $ticket_messages->sender_customer_id = Auth::user()->id;
+        $ticket_messages->sender_customer_id = Auth::guard('customer')->user()->id;
         $ticket_messages->message = $request->message;
         $ticket_messages->recipient_techsupport_id = $ticket->get(0)->techsupport_id;
         $ticket_messages->save();
@@ -94,8 +106,42 @@ class CustomerController extends BaseApiController {
         
     }
 
-    public function send_ticket(){
+    public function send_ticket(Request $request){
 
+        $input = request()->validate([
+
+            'receipt' => 'mimes:jpeg,jpg,png,bmp,gif,tif,tiff|max:50000|',
+
+       ], [
+
+       ]);
+
+       if ($request->hasFile('receipt')) {
+        $filenameWithExt = $request->file('receipt')->getClientOriginalName();
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        $extension = $request->file('receipt')->getClientOriginalExtension();
+        $fileNametoStore = $filename.'_'.time().'.'.$extension;
+        $path = $request->file('receipt')->storeAs('public/images',$fileNametoStore);
+        
+    }
+
+ 
+    $ticket_id = Ticket::orderBy('id','desc')->first();
+    $techs = Techsupport::where('status','active')->where('role','techsupport')->where('id','!=',$ticket_id->techsupport_id)->get()->random(1);
+    
+
+  
+
+    $ticket = new Ticket();
+    $ticket->customer_id = Auth::guard('customer')->user()->id;
+    $ticket->product_id = $request->product;
+    $ticket->techsupport_id = $techs->get(0)->id;
+    $ticket->branch_id = $request->branch;
+    $ticket->message = $request->message;
+    $ticket->dop = $request->dop;
+    $ticket->receipt = $fileNametoStore;
+    $ticket->status = 'pending';
+    $ticket->save();
     }
 
 }

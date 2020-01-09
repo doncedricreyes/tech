@@ -21,10 +21,19 @@ class ApiAuthCustomer
     {
         //return response('This shit is working', 403);
         $oSerializer = new BasicAuthSerializer('Y3VzdG9tZXJAZXhhbXBsZS5jb206cGFzc3dvcmQ=');
-        echo "Username: " . $oSerializer->getUsername();
-        echo "Password: " . $oSerializer->getPassword();
-        return response()->json($oSerializer->getCredentials());
+
+        if (Auth::guard('customer')->attempt(['email' => $oSerializer->getUsername(), 'password' => $oSerializer->getPassword()])) {
+            
+            return $next($request);
+        }else{
+           
+            return response()->json(['error' => 'Not authorized.'],403);
+        }
+     
+
+
         
-        return $next($request);
+       
+     
     }
 }
