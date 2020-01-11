@@ -40,7 +40,7 @@ class CustomerController extends Controller
     public function service()
     {
      
-        $brands = Brand::get();
+        $brands = Brand::where('status','active')->get();
         $products = Product::with('brands')->get();
         return view('customer.service',['products'=>$products,'brands'=>$brands]);
     }
@@ -49,7 +49,7 @@ class CustomerController extends Controller
     {
         $brand = $request->brand;
 
-        $products = Product::with('brands')->where('brand_id','=',$brand)->get();
+        $products = Product::with('brands')->where('brand_id','=',$brand)->where('status','available')->get();
         return view('customer.product',['products'=>$products]);
     }
 

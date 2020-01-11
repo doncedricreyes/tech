@@ -8,8 +8,8 @@
 }
     </style>
 <div class="contact-head">
-    <h1>Support and Services</h1>
-    <img src="/storage/images/contact.jpeg">
+    <h1>My Account</h1>
+    <img src="/storage/images/account.png">
     <div class="overlay"></div>
 </div>
 

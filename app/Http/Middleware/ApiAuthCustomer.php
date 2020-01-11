@@ -20,7 +20,7 @@ class ApiAuthCustomer
     public function handle($request, Closure $next)
     {
         //return response('This shit is working', 403);
-        $oSerializer = new BasicAuthSerializer('Y3VzdG9tZXJAZXhhbXBsZS5jb206cGFzc3dvcmQ=');
+        $oSerializer = new BasicAuthSerializer($request->header('Authorization'));
 
         if (Auth::guard('customer')->attempt(['email' => $oSerializer->getUsername(), 'password' => $oSerializer->getPassword()])) {
             

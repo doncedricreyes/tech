@@ -44,7 +44,7 @@ class CustomerController extends BaseApiController {
     }
 
     public function getBrands(){
-        $aBrands = Brand::get();
+        $aBrands = Brand::where('status','active')->get();
         return response()->json($aBrands);
 
     }
@@ -52,7 +52,7 @@ class CustomerController extends BaseApiController {
     public function getProducts(Request $request){
         $brand = $request->brand;
 
-        $aProducts = Product::with('brands')->where('brand_id','=',$brand)->get();
+        $aProducts = Product::with('brands')->where('brand_id','=',$brand)->where('status','available')->get();
         return response()->json($aProducts);
     }
 
