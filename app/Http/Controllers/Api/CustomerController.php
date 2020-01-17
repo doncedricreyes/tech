@@ -37,9 +37,8 @@ class CustomerController extends BaseApiController {
         
         
         $id = Auth::guard('customer')->user()->id;
-        $aTickets = Ticket::with('products','customers')->where('customer_id',$id)->orderBy('created_at','DESC')->get();
-        
-        return response()->json($aTickets);
+        $aCustomers = Customer::where('id',$id)->get();
+        return response()->json($aCustomers);
     
     }
 
@@ -67,7 +66,7 @@ class CustomerController extends BaseApiController {
     public function getTickets() {
       
         $id = Auth::guard('customer')->user()->id;
-        $aTickets = Ticket::with('products','customers')->where('customer_id',$id)->orderBy('created_at','DESC')->get();
+        $aTickets = Ticket::with('products','techsupports')->where('customer_id',$id)->orderBy('created_at','DESC')->get();
         
         return response()->json($aTickets);
     }
@@ -75,8 +74,8 @@ class CustomerController extends BaseApiController {
     
     public function viewTickets($id) {
       
-        $aTickets = Ticket::with('products','customers')->where('id',$id)->where('customer_id',Auth::guard('customer')->user()->id)->get();
-        $aTicket_messages = Ticket_Message::with('tickets','customers','techsupports')->where('ticket_id',$id)->get();
+        $aTickets = Ticket::with('products','techsupports')->where('id',$id)->where('customer_id',Auth::guard('customer')->user()->id)->get();
+        $aTicket_messages = Ticket_Message::with('tickets','techsupports')->where('ticket_id',$id)->get();
 
         return response()->json($aTickets,$aTicket_messages);
         
@@ -87,7 +86,7 @@ class CustomerController extends BaseApiController {
     {
         $search = $request->search;
         $id = Auth::guard('customer')->user()->id;
-        $aTickets = Ticket::with('products','customers')->where('customer_id',$id)->where('id',$search)->orderBy('created_at','DESC')->paginate(10);
+        $aTickets = Ticket::with('products','techsupports')->where('customer_id',$id)->where('id',$search)->orderBy('created_at','DESC')->paginate(10);
 
         return response()->json($aTickets);
     }
