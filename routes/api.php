@@ -28,6 +28,7 @@ Route::prefix('/customer')->middleware('apiCustomer')->group(function() {
     Route::get('/service/tickets/{id}','Api\CustomerController@viewTickets');
     Route::post('/service/tickets/{id}/message','Api\CustomerController@send_message');
     Route::post('/service/products/ticket/submit','Api\CustomerController@send_ticket');
+    Route::get('/branch','Api\CustomerController@branch');
 
 
 });

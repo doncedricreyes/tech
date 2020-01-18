@@ -59,9 +59,9 @@ class CustomerController extends BaseApiController {
     {
        
         $product = $request->product;
-        $aBranches = Branch::where('status','active')->get();
+    
         $aProducts = Product::with('brands')->where('id','=',$product)->get();
-        return response()->json($aBranches,$aProducts);
+        return response()->json($aProducts);
     }
     public function getTickets() {
       
@@ -143,4 +143,10 @@ class CustomerController extends BaseApiController {
     $ticket->save();
     }
 
+
+    public function branch()
+    {
+        $aBranches = Branch::where('status','active')->get();
+        return response()->json($aBranches);
+    }
 }
