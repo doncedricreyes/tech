@@ -64,4 +64,9 @@ class Repair extends Authenticatable
     {
         return $this->belongsTo(Request_Inventory::class);
     }
+
+    public function report()
+    {
+        return $this->belongsTo(Report::class);
+    }
 }

@@ -10,7 +10,11 @@
     position: relative;
     float: right;
 }
-
+#report{
+    margin: 10;
+    position: relative;
+    float: right;
+}
 </style>
 @section('content')
 
@@ -64,14 +68,24 @@
        </div>
        @endforeach
        <br><br>
+             
+        
+
        <div class="form-group">      
             <textarea class="form-control" rows="8"  name="message" id="message" required placeholder="Enter your message..."></textarea>
             <input type="submit" id="submit" class="btn btn-primary" value="Send Message">
+        </form>
+            <form target="_blank" action = "/techsupport/tickets/report/create" method="get"  enctype="multipart/form-data">
+                {{csrf_field() }}        
+        <input type="submit" class="btn btn-primary" id="report"  value="Create Report">
+            <input type="hidden" name="id" value="{{$tickets->get(0)->id}}">
+            </form>
+
        </div>
    
-
+      
      
-        </form>
+   
 
 </div>
 @endsection

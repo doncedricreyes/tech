@@ -14,6 +14,8 @@ use App\Order;
 use App\Request_Inventory;
 use App\Ticket;
 use App\Ticket_Message;
+use App\Customer;
+use App\Report;
 use Auth;
 use Image;
 use Excel;
@@ -86,6 +88,11 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
+    public function customer()
+    {
+        $customers = Customer::orderBy('name')->paginate(10);
+        return view('admin.customer',['customers'=>$customers]);
+    }
     public function repair()
     {
        $branches = Branch::get();
@@ -134,8 +141,9 @@ class AdminController extends Controller
 
     public function tech()
     {
-        $techsupports = Techsupport::where('status','active')->orderBy('name')->paginate(10);
-        return view('admin.tech',['techsupports'=>$techsupports]);
+        $techsupports = Techsupport::with('brands')->where('status','active')->orderBy('name')->paginate(10);
+        $brands = Brand::where('status','active')->get();
+        return view('admin.tech',['techsupports'=>$techsupports,'brands'=>$brands]);
     }
     
     public function create_tech(Request $request)
@@ -159,6 +167,7 @@ class AdminController extends Controller
        $tech->email=$request->email;
        $tech->contact=$request->contact;
        $tech->password = Hash::make($request->password);
+       $tech->brand_id = $request->brand;
        $tech->status = "active";
        $tech->save();
        $request->session()->flash('alert-success', 'Account Successfully Created!');
@@ -648,6 +657,18 @@ class AdminController extends Controller
             return view('admin.ticket',['tickets'=>$tickets]);
         }
       
+    }
+
+    public function index_report()
+    {
+        $reports = Report::with('tickets','repairs')->orderBy('created_at','asc')->paginate(10);
+        return view ('admin.index_report',['reports'=>$reports]);
+    }
+
+    public function view_report($id)
+    {
+        $reports = Report::with('tickets','repairs')->where('id',$id)->get();
+        return view('admin.view_report',['reports'=>$reports]);
     }
 
 }

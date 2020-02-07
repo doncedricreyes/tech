@@ -80,9 +80,10 @@ class CustomerController extends Controller
         
     }
 
+    $products = Product::with('brands')->where('id',$request->product)->get();
  
     $ticket_id = Ticket::orderBy('id','desc')->first();
-    $techs = Techsupport::where('status','active')->where('role','techsupport')->where('id','!=',$ticket_id->techsupport_id)->get()->random(1);
+    $techs = Techsupport::where('status','active')->where('role','techsupport')->where('id','!=',$ticket_id->techsupport_id)->where('brand_id',$products->get(0)->brand_id)->get()->random(1);
     
 
   
@@ -145,7 +146,7 @@ class CustomerController extends Controller
         $ticket_messages->recipient_techsupport_id = $ticket->get(0)->techsupport_id;
         $ticket_messages->save();
     
-        $request->session()->flash('alert-success', 'Message Successfully Sent!');
+      
         return redirect()->back();
         
     }

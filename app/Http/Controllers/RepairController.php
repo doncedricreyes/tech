@@ -13,6 +13,7 @@ use App\Inventory;
 use App\Category;
 use App\Order;
 use App\Request_Inventory;
+use App\Report;
 use Illuminate\Http\Request;
 
 class RepairController extends Controller
@@ -34,9 +35,9 @@ class RepairController extends Controller
 
     public function repairs()
     {
-        $ticket_repairs = Ticket_Repair::with('tickets','repairs')->where('repair_id',Auth::user()->id)->orderBy('created_at','asc')->paginate(10);
+        $reports = Report::with('tickets','repairs')->where('repair_id',Auth::user()->id)->orderBy('created_at','asc')->paginate(10);
 
-        return view('repair.repair',['ticket_repairs'=>$ticket_repairs]);
+        return view('repair.repair',['reports'=>$reports]);
     }
 
     public function repair_message($id)
@@ -231,5 +232,11 @@ class RepairController extends Controller
         }
         
       
+    }
+
+    public function report($id)
+    {
+        $reports = Report::with('tickets','repairs')->where('id',$id)->where('repair_id',auth::user()->id)->get();
+        return view('repair.view_report',['reports'=>$reports]);
     }
 }

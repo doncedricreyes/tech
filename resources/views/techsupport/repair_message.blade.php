@@ -42,7 +42,7 @@
      
  
         @foreach($ticket_repairs as $i)
-        <form action = "{{route('techsupport.repair_message', $i->tickets->get(0)->id)}}" method="post" enctype="multipart/form-data">
+        <form action = "{{route('techsupport.repair_message', $tickets->get(0)->id)}}" method="post" enctype="multipart/form-data">
         
             {{csrf_field() }}
         <div class="form-group">      

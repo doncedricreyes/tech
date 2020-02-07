@@ -25,10 +25,10 @@
             
             
             <div class="col-md-12">
-            <legend class="tbl-title">Pending Tickets</legend>
+            <legend class="tbl-title">Tickets</legend>
             <div class="tbl-widg">
                 <div class="form-group">
-                    <form action = "{{route('search_pending')}}" role="search" method="get"enctype="multipart/form-data">
+                    <form action = "{{route('search.ticket')}}" role="search" method="get"enctype="multipart/form-data">
                       <input type="text" class="form-control" name="search" id="search" placeholder="Search by ticket #">
                     </form>
                   </div>
@@ -70,17 +70,33 @@
                <td><h6>{{$i->products->get(0)->name}}</h6></td>
                <td><h6>{{$i->branches->get(0)->name}}</h6></td>
                <td><h6>{{$i->dop}}</h6></td>
-               <td><a href="/storage/images/{{$i->receipt}}" download="{{$i->receipt}}"><i class="fas fa-images"></i></a></td>
+               <td><a href="/storage/images/{{$i->receipt}}" download="{{$i->receipt}}"><i class="fas fa-images fa-2x"></i></a></td>
 
-               <form action="{{route('techsupport.pending.ticket_status',$i->id)}}" method="post" enctype="multipart/form-data">
+               <form action="{{route('status.ticket',$i->id)}}" method="post" enctype="multipart/form-data">
                 {{csrf_field() }}
                 <input name="_method" type="hidden" value="PUT">
-               <td><h6><select  name="status" id="status" onchange="this.form.submit()">
+           
+               <td><h6><select name="status" id="status" onchange="this.form.submit()">
+                @if($i->status == 'pending')
                 <option selected value> Pending </option>
               <option value="open">Open</option>
               <option value="closed">Closed</option>
+              @endif
+              @if($i->status == 'open')
+              <option selected value> Open </option>
+            <option value="pending">Pending</option>
+            <option value="closed">Closed</option>
+            @endif
+            @if($i->status == 'closed')
+            <option selected value> Closed </option>
+          <option value="open">Open</option>
+          <option value="pending">pending</option>
+          @endif
             </select></h6></td>
+            
                </form>
+         
+         
         </tr>
 @endforeach
 

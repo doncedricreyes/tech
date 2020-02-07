@@ -51,5 +51,9 @@ class Techsupport extends Authenticatable
     {
         return $this->belongsTo(Repair_Message::class);
     }
+    public function brands()
+    {
+        return $this->belongsTo(Brand::class,'brand_id','id');
+    }
  
 }

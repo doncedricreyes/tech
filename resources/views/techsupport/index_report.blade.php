@@ -1,4 +1,4 @@
-@extends('layouts.repair')
+@extends('layouts.techsupport')
 
 @section('content')
 <div class="container" id="view">
@@ -25,11 +25,11 @@
             
             
             <div class="col-md-12">
-            <legend class="tbl-title">My Repairs</legend>
+            <legend class="tbl-title">Reports</legend>
             <div class="tbl-widg">
                 <div class="form-group">
-                    <form action = "{{route('repair_search')}}" role="search" method="get"enctype="multipart/form-data">
-                      <input type="text" class="form-control" name="search" id="search" placeholder="Search by ticket #">
+                    <form action = "{{route('search.ticket')}}" role="search" method="get"enctype="multipart/form-data">
+                      <input type="text" class="form-control" name="search" id="search" placeholder="Search by report #">
                     </form>
                   </div>
                 <div>
@@ -45,11 +45,13 @@
                       <thead>
                        
                             <th>#</th>
-                          <th>ticket #</th>
-                          <th>Brand</th>
-                          <th>Product</th>
-                          <th>Report</th>
-                          <th>Charges and fees</th>
+                          <th>Report #</th>
+                          <th>Repairman assigned</th>
+                          <th>Customer Name</th>
+                          <th>Priority</th>
+                          <th>Status</th>
+                          <th>Date Created</th>
+
                   
                      </thead>
         <tbody>
@@ -57,11 +59,16 @@
             @foreach($reports as $i)
             <tr>
                 <td><h6>{{ ($reports ->currentpage()-1) * $reports ->perpage() + $loop->index + 1 }}</h6></td>
-               <td><a href="/repair/repairs/{{$i->ticket_id}}"> <h6>{{$i->ticket_id}}</h6></a></td>
-               <td><h6>{{$i->tickets->get(0)->products->get(0)->brands->name}}</h6></td>
-               <td><h6>{{$i->tickets->get(0)->products->get(0)->name}}</h6></td>
-               <td><a href="/repair/report/{{$i->id}}"><i class="fas fa-file-alt fa-2x"></i></a></td>
-             
+               <td><a href="/techsupport/reports/{{$i->id}}"> <h6>{{$i->id}}</h6></a></td>
+               <td><a href="/techsupport/tickets/repairs/{{$i->ticket_id}}/messages"> <h6>{{$i->repairs->get(0)->name}}</h6></a></td>
+               <td><h6>{{$i->tickets->get(0)->customers->get(0)->name}}</h6></td>
+               <td><h6>{{$i->priority}}</h6></td>
+               <td><h6>{{$i->tickets->get(0)->status}}</h6></td>
+               <td><h6>{{$i->created_at}}</h6></td>
+
+
+         
+         
         </tr>
 @endforeach
 

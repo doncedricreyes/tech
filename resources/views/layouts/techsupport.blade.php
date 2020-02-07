@@ -84,13 +84,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <ul class="sidebar-menu" data-widget="tree">
           <!-- Optionally, you can add icons to the links -->
 
-          <li class="{{Request::is('techsupport/tickets/pending') ? 'active' : ''}}"><a href="/techsupport/tickets/pending"><i class="fas fa-envelope-open"></i> <span>Pending tickets</span></a></li>
-          <li class="{{Request::is('techsupport/tickets/open') ? 'active' : ''}}"><a href="/techsupport/tickets/open"><i class="fas fa-envelope-open-text"></i> <span>Active tickets</span></a></li>
-          <li class="{{Request::is('techsupport/tickets/closed') ? 'active' : ''}}"><a href="/techsupport/tickets/closed"><i class="fa fa-envelope-square"></i> <span>Closed tickets</span></a></li>
+        
+          <li class="{{Request::is('techsupport/tickets') ? 'active' : ''}}"><a href="/techsupport/tickets"><i class="fas fa-envelope-open-text"></i> <span>Tickets</span></a></li>
+          
+          <li class="{{Request::is('techsupport/reports') ? 'active' : ''}}"><a href="/techsupport/reports"><i class="fas fa-file-alt"></i> <span>Reports</span></a></li>
 
 
 
-
+        
           <li class="{{Request::is('techsupport/account') ? 'active' : ''}}"><a href="/techsupport/account"><i class="fas fa-user"></i>  <span>Account</span></a></li>
           <li><a href="/techsupport/logout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
         </ul>

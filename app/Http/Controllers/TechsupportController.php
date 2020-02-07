@@ -8,6 +8,7 @@ use App\Repair;
 use App\Ticket_Repair;
 use App\Repair_Message;
 use App\Customer;
+use App\Report;
 use Hash;
 use Auth;
 use Image;
@@ -35,14 +36,14 @@ class TechsupportController extends Controller
         return view('techsupport.home');
     }
 
-    public function pending()
+    public function index_ticket()
     {
         $id = auth::user()->id;
-        $tickets = Ticket::where('techsupport_id',$id)->where('status','pending')->orderBy('created_at','asc')->paginate(10);
-        return view('techsupport.pending',['tickets'=>$tickets]);
+        $tickets = Ticket::where('techsupport_id',$id)->orderBy('created_at','asc')->paginate(10);
+        return view('techsupport.index_ticket',['tickets'=>$tickets]);
     }
 
-    public function pending_status($id, Request $request)
+    public function status_ticket($id, Request $request)
     {
         
         $tickets = Ticket::find($id);
@@ -142,8 +143,9 @@ class TechsupportController extends Controller
     public function repair_message($id)
     {
         $ticket_repairs = Ticket_Repair::with('tickets','repairs')->where('ticket_id',$id)->get();
+        $tickets = Ticket::where('id',$id)->get();
         $repair_messages = Repair_Message::with('repairs','techsupports','tickets')->where('ticket_id',$id)->get();
-        return view('techsupport.repair_message',['ticket_repairs'=>$ticket_repairs,'repair_messages'=>$repair_messages]);
+        return view('techsupport.repair_message',['tickets'=>$tickets,'ticket_repairs'=>$ticket_repairs,'repair_messages'=>$repair_messages]);
     }
 
     public function send_repair_message(Request $request,$id)
@@ -167,61 +169,25 @@ class TechsupportController extends Controller
     }
 
     
-    public function search_pending(Request $request)
+    public function search_ticket(Request $request)
     {
         $search = $request->search;
         
         $id = auth::user()->id;
-        $tickets = Ticket::where('id',$search)->where('techsupport_id',$id)->where('status','pending')->orderBy('created_at','asc')->paginate(10);
+        $tickets = Ticket::where('id',$search)->where('techsupport_id',$id)->orderBy('created_at','asc')->paginate(10);
         if($tickets->isEmpty()){
             $request->session()->flash('alert-danger', 'Ticket not found!');
-            return view('techsupport.pending',['tickets'=>$tickets]);
+            return view('techsupport.index_ticket',['tickets'=>$tickets]);
     
         }
         else{
             $request->session()->flash('alert-success', 'Ticket found!');
-            return view('techsupport.pending',['tickets'=>$tickets]);
+            return view('techsupport.index_ticket',['tickets'=>$tickets]);
         }
       
     }
 
-    public function search_open(Request $request)
-    {
-        $search = $request->search;
-        
-        $id = auth::user()->id;
-        $tickets = Ticket::where('id',$search)->where('techsupport_id',$id)->where('status','open')->orderBy('created_at','asc')->paginate(10);
-        $ticket_repairs = Ticket_Repair::with('tickets','repairs')->get();
-       
-        if($tickets->isEmpty()){
-            $request->session()->flash('alert-danger', 'Ticket not found!');
-            return view('techsupport.open',['tickets'=>$tickets,'ticket_repairs'=>$ticket_repairs]);
-    
-        }
-        else{
-            $request->session()->flash('alert-success', 'Ticket found!');
-            return view('techsupport.open',['tickets'=>$tickets,'ticket_repairs'=>$ticket_repairs]);
-        }
-       
-    }
 
-    public function search_close(Request $request)
-    {
-        $search = $request->search;
-        
-        $id = auth::user()->id;
-        $tickets = Ticket::where('id',$search)->where('techsupport_id',$id)->where('status','closed')->orderBy('created_at','asc')->paginate(10);
-        if($tickets->isEmpty()){
-            $request->session()->flash('alert-danger', 'Ticket not found!');
-            return view('techsupport.close',['tickets'=>$tickets]);
-    
-        }
-        else{
-            $request->session()->flash('alert-success', 'Ticket found!');
-            return view('techsupport.close',['tickets'=>$tickets]);
-        }
-        
-    }
 
     public function account()
     {
@@ -257,5 +223,50 @@ class TechsupportController extends Controller
         }
      
      
+    }
+
+    public function report(Request $request)
+    {
+        $tickets = Ticket::with('customers','products','techsupports','branches')->where('id',$request->id)->get();
+        $repairs = Repair::with('branches')->where('branch_id',$tickets->get(0)->branch_id)->get();
+        return view('techsupport.report',['tickets'=>$tickets,'repairs'=>$repairs]);
+    }
+
+    public function create_report(Request $request)
+    {
+        $id = $request->ticket;
+        $report = new Report();
+        $report->ticket_id = $request->ticket;
+        $report->priority = $request->priority;
+        $report->repair_id = $request->repair;
+        $report->cost = $request->cost;
+        $report->issue = $request->issue;
+        $report->solution = $request->solution;
+        $report->save();
+
+        $ticket = Ticket::find($id);
+        $ticket->repair_id = $request->repair;
+        $ticket->save();
+
+        $ticket_repair = new Ticket_Repair();
+        $ticket_repair->ticket_id = $id;
+        $ticket_repair->repair_id = $request->repair;
+        $ticket_repair->message = $request->issue;
+        $ticket_repair->save();
+        $request->session()->flash('alert-success', 'Report successfully created!');
+        return redirect()->back();
+
+    }
+
+    public function index_report()
+    {
+        $reports = Report::with('tickets','repairs')->orderBy('created_at','asc')->paginate(10);
+        return view ('techsupport.index_report',['reports'=>$reports]);
+    }
+
+    public function view_report($id)
+    {
+        $reports = Report::with('tickets','repairs')->where('id',$id)->get();
+        return view('techsupport.view_report',['reports'=>$reports]);
     }
 }

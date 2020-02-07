@@ -85,7 +85,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- Optionally, you can add icons to the links -->
 
             <li class="{{Request::is('admin/employees') || Request::is('admin') ? 'active' : ''}} treeview" >
-              <a href="/admin/employees"><i class="fa fa-users"></i> <span>Employees</span>
+              <a href="/admin/employees"><i class="fa fa-users"></i> <span>Users</span>
                 <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
                   </span>
@@ -94,9 +94,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <li class="{{Request::is('admin/employees/admins') ? 'active' : ''}}"><a href="/admin/employees/admins"><i class="fa fa-user"></i>Admins</a></li>
                 <li class="{{Request::is('admin/employees/techsupport') ? 'active' : ''}}"><a href="/admin/employees/techsupports"><i class="fa fa-user"></i>Tech Supports</a></li>
                 <li class="{{Request::is('admin/employees/repairmen') ? 'active' : ''}}"><a href="/admin/employees/repairmen"><i class="fa fa-user"></i>Repairmen</a></li>
+                <li class="{{Request::is('admin/customers') ? 'active' : ''}}"><a href="/admin/customers"><i class="fa fa-user"></i>Customers</a></li>
               </ul>
             </li>
             <li class="{{Request::is('admin/tickets') ? 'active' : ''}}"><a href="/admin/tickets"><i class="fas fa-envelope-open-text"></i> <span>Tickets</span></a></li>
+            <li class="{{Request::is('admin/reports') ? 'active' : ''}}"><a href="/admin/reports"><i class="fas fa-file-alt"></i> <span>Reports</span></a></li>
           <li class="{{Request::is('admin/brands') ? 'active' : ''}}"><a href="/admin/brands"><i class="fa fa-clipboard"></i> <span>Brands</span></a></li>
           <li class="{{Request::is('admin/products') ? 'active' : ''}}"><a href="/admin/products"><i class="fas fa-laptop"></i> <span>Products</span></a></li>
           <li class="{{Request::is('admin/branches') ? 'active' : ''}}"><a href="/admin/branches"><i class="fa fa-location-arrow"></i> <span>Branches</span></a></li>

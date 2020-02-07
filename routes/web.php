@@ -40,7 +40,7 @@ Route::post('/password/reset', 'Auth\AdminResetPasswordController@reset');
 Route::get('/password/reset/{token}', 'Auth\AdminResetPasswordController@showResetForm')->name('admin.password.reset');
 Route::get('account','AdminController@account');
 Route::put('account','AdminController@account_update')->name('update.admin');
-
+Route::get('/customers','AdminController@customer');
 Route::post('/employees/admins/create','AdminController@create_admin')->name('create.admin');
 Route::put('/employees/admins/{id}/delete','AdminController@delete_admin')->name('delete.admin');
 Route::get('/employees/admins/search','AdminController@search_admin')->name('search_admin');
@@ -80,6 +80,8 @@ Route::put('/inventory/requests/{id}','AdminController@request_status')->name('r
 Route::get('/tickets','AdminController@ticket');
 Route::get('/tickets/{id}','AdminController@ticket_message');
 Route::get('/search/tickets','AdminController@search_ticket')->name('admin.search_ticket');
+Route::get('/reports','AdminController@index_report');
+Route::get('/reports/{id}','AdminController@view_report');
 });
 
 Route::prefix('techsupport')->group(function()
@@ -94,21 +96,20 @@ Route::post('/password/reset', 'Auth\TechsupportResetPasswordController@reset');
 Route::get('/password/reset/{token}', 'Auth\TechsupportResetPasswordController@showResetForm')->name('techsupport.password.reset');
 Route::get('account','TechsupportController@account');
 Route::put('account','TechsupportController@account_update')->name('update.techsupport');
-Route::get('/tickets/pending','TechsupportController@pending')->name('techsupport.pending');
-Route::put('/tickets/pending/{id}','TechsupportController@pending_status')->name('techsupport.pending.ticket_status');
-Route::get('/tickets/pending/search','TechsupportController@search_pending')->name('search_pending');
-Route::get('/tickets/open','TechsupportController@open')->name('techsupport.open');
-Route::put('/tickets/open/{id}','TechsupportController@open_status')->name('techsupport.open.ticket_status');
-Route::get('/tickets/open/search','TechsupportController@search_open')->name('search_open');
-Route::get('/tickets/closed','TechsupportController@close')->name('techsupport.close');
-Route::put('/tickets/closed/{id}','TechsupportController@close_status')->name('techsupport.close.ticket_status');
-Route::get('/tickets/closed/search','TechsupportController@search_close')->name('search_close');
+
+Route::get('/tickets','TechsupportController@index_ticket')->name('index.ticket');
+Route::put('/tickets/status/{id}','TechsupportController@status_ticket')->name('status.ticket');
+Route::get('/tickets/search','TechsupportController@search_ticket')->name('search.ticket');
 Route::get('/tickets/{id}','TechsupportController@ticket');
 Route::post('/tickets/{id}/message','TechsupportController@send_message')->name('techsupport.message');
 Route::get('/tickets/repairs/{id}','TechsupportController@repair');
 Route::post('/tickets/repairs/{id}','TechsupportController@send_repair')->name('techsupport.repair');
 Route::get('/tickets/repairs/{id}/messages','TechsupportController@repair_message');
 Route::post('/tickets/repairs/{id}/message','TechsupportController@send_repair_message')->name('techsupport.repair_message');
+Route::get('/tickets/report/create','TechsupportController@report')->name('report');
+Route::post('/tickets/report/create','TechsupportController@create_report')->name('create_report');
+Route::get('/reports','TechsupportController@index_report');
+Route::get('/reports/{id}','TechsupportController@view_report');
 
 });
 
@@ -135,6 +136,7 @@ Route::get('/inventory/orders','RepairController@view_order');
 Route::get('/inventory/orders/search','RepairController@search_order')->name('order_search');
 Route::get('/inventory/requests','RepairController@view_request');
 Route::get('/inventory/requests/search','RepairController@search_request')->name('request_search');
+Route::get('/report/{id}','RepairController@report');
 });
 
 Route::prefix('customer')->group(function()

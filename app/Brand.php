@@ -16,4 +16,8 @@ class Brand extends Model
         return $this->hasOne(Product::class);
     }
 
+    public function techsupport()
+    {
+        return $this->hasOne(Techsupport::class);
+    }
 }

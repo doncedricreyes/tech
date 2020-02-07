@@ -53,7 +53,7 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Contact</th>
-                                        <th>Role</th>
+                                        <th>Brand</th>
                                        <th>Status</th>
                                        <th>Delete</th>
                                    </thead>
@@ -64,7 +64,7 @@
                                <td><h4>{{$i->name}}</h4></td>
                                <td><h4>{{$i->email}}</h4></td>
                                <td><h4>{{$i->contact}}</h4></td>
-                               <td><h4>{{$i->role}}</h4></td>
+                               <td><h4>{{$i->brands->name}}</h4></td>
                                <td><h4>{{$i->status}}</h4></td>
                               <form action = "{{route('delete.tech', $i->id)}}" method="post" enctype="multipart/form-data">
             
@@ -121,16 +121,26 @@
                   <label>Email:</label>
                   <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
                 </div>
+
+                <div class="form-group">
+                  <label>Password:</label>
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+                </div>
+
                 <div class="form-group">
                
                         <label>Contact:</label>
                         <input type="number" maxlength="11" class="form-control" id="contact" name="contact" placeholder="Enter contact">
                       </div>
 
-                <div class="form-group">
-                      <label>Password:</label>
-                      <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
-                    </div>
+                      <div class="form-group">
+                        <label for="brand"> Brand:</label>
+                        <select class="form-control" name="brand" id="brand">
+                            @foreach($brands as $row)
+                              <option value={{$row->id}}>{{$row->name}}</option>
+                              @endforeach
+                       </select>
+                        </div>
      
         </div>
         <div class="modal-footer">

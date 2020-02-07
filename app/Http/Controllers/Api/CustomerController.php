@@ -125,8 +125,10 @@ class CustomerController extends BaseApiController {
     }
 
  
+    $products = Product::with('brands')->where('id',$request->product)->get();
+ 
     $ticket_id = Ticket::orderBy('id','desc')->first();
-    $techs = Techsupport::where('status','active')->where('role','techsupport')->where('id','!=',$ticket_id->techsupport_id)->get()->random(1);
+    $techs = Techsupport::where('status','active')->where('role','techsupport')->where('id','!=',$ticket_id->techsupport_id)->where('brand_id',$products->get(0)->brand_id)->get()->random(1);
     
 
   
